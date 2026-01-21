@@ -1,0 +1,9 @@
+{{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.slug) }}
+
+    <div class="mt-3">
+        <button class="btn btn-dark">{{ button_label|default('Enregistrer') }}</button>
+        <a href="{{ path('admin_category_index') }}" class="btn btn-outline-dark">Retour</a>
+    </div>
+{{ form_end(form) }}
