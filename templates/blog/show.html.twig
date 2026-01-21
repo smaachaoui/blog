@@ -1,20 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ post.title }}{% endblock %}
+    {% block title %}{{ post.title }}{% endblock %}
 
-{% block body %}
-<article class="card shadow-sm page-card">
-    <div class="card-body p-4">
-        <h1 class="h4 mb-1">{{ post.title }}</h1>
-        <div class="text-muted small mb-4">
-            {{ post.bookAuthor }} · {{ post.category.name }} · {{ post.createdAt|date('d/m/Y') }}
+    {% block body %}
+    <article class="card shadow-sm page-card">
+        <div class="card-body p-4">
+            <h1 class="h4 mb-1">{{ post.title }}</h1>
+            <div class="text-muted small mb-4">
+                {{ post.bookAuthor }} · {{ post.category.name }} · {{ post.createdAt|date('d/m/Y') }}
+            </div>
+
+            <div class="mb-4">
+                {{ post.content|nl2br }}
+            </div>
+
+            <a href="{{ path('app_home') }}" class="btn btn-outline-dark btn-sm">Retour</a>
         </div>
+    </article>
 
-        <div class="mb-4">
-            {{ post.content|nl2br }}
+    <hr class="my-4">
+
+    <section>
+        <h2 class="h5 mb-3">Commentaires</h2>
+
+        {% if comments is empty %}
+            <p class="text-muted mb-4">Aucun commentaire pour le moment.</p>
+        {% else %}
+            <div class="d-flex flex-column gap-3 mb-4">
+                {% for comment in comments %}
+                    <div class="card shadow-sm page-card">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong>{{ comment.authorName }}</strong>
+                                <span class="text-muted small">{{ comment.createdAt|date('d/m/Y H:i') }}</span>
+                            </div>
+                            <div>
+                                {{ comment.content|nl2br }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="card shadow-sm page-card">
+            <div class="card-body p-4">
+                <h3 class="h6 mb-3">Laisser un commentaire</h3>
+
+                {{ form_start(commentForm) }}
+                    {{ form_row(commentForm.authorName) }}
+                    {{ form_row(commentForm.authorEmail) }}
+                    {{ form_row(commentForm.content) }}
+
+                    <button class="btn btn-dark">Envoyer</button>
+                {{ form_end(commentForm) }}
+            </div>
         </div>
+    </section>
 
-        <a href="{{ path('app_home') }}" class="btn btn-outline-dark btn-sm">Retour</a>
-    </div>
-</article>
 {% endblock %}
