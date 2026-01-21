@@ -3,7 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Comment;
-use App\Form\Comment1Type;
+use App\Form\Admin\CommentAdminType;
+
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
