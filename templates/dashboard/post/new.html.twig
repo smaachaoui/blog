@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Article{% endblock %}
+
+{% block body %}
+<div class="card shadow-sm page-card">
+    <div class="card-body p-4">
+        <h1 class="h4 mb-3">{{ title|default('Article') }}</h1>
+
+        {{ include('post/_form.html.twig') }}
+    </div>
+</div>
+{% endblock %}
