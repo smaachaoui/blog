@@ -6,8 +6,6 @@ use App\Repository\CategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-
-#[ORM\Entity]
 #[ORM\Table(name: 'category')]
 #[ORM\UniqueConstraint(name: 'uniq_category_slug', columns: ['slug'])]
 class Category
