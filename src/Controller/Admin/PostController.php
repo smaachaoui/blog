@@ -26,6 +26,7 @@ class PostController extends AbstractController
     #[Route('/new', name: 'admin_post_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted(\App\Security\Voter\PostVoter::CREATE);
         $post = new Post();
         $post->setAuthor($this->getUser());
         $form = $this->createForm(PostType::class, $post);
@@ -55,6 +56,7 @@ class PostController extends AbstractController
     #[Route('/{id}/edit', name: 'admin_post_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted(\App\Security\Voter\PostVoter::EDIT, $post);
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
@@ -74,6 +76,7 @@ class PostController extends AbstractController
     #[Route('/{id}', name: 'admin_post_delete', methods: ['POST'])]
     public function delete(Request $request, Post $post, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted(\App\Security\Voter\PostVoter::DELETE, $post);
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($post);
             $entityManager->flush();
