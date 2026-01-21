@@ -32,7 +32,16 @@
                 <td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('admin_post_show', {'id': post.id}) }}">show</a>
-                    <a href="{{ path('admin_post_edit', {'id': post.id}) }}">edit</a>
+                    
+                    {% if is_granted('POST_EDIT', post) %}
+                        <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn btn-sm btn-outline-dark">Éditer</a>
+                    {% endif %}
+
+                    {% if is_granted('POST_DELETE', post) %}
+                        {# bouton delete #}
+                    {% endif %}
+
+
                 </td>
             </tr>
         {% else %}

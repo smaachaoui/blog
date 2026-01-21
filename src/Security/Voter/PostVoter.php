@@ -5,8 +5,8 @@ namespace App\Security\Voter;
 use App\Entity\Post;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\Security;
 
 class PostVoter extends Voter
 {
@@ -14,7 +14,7 @@ class PostVoter extends Voter
     public const EDIT = 'POST_EDIT';
     public const DELETE = 'POST_DELETE';
 
-    public function __construct(private readonly Security $security)
+    public function __construct(private readonly AuthorizationCheckerInterface $auth)
     {
     }
 
@@ -38,12 +38,12 @@ class PostVoter extends Voter
             return false;
         }
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+        if ($this->auth->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
         if ($attribute === self::CREATE) {
-            return $this->security->isGranted('ROLE_USER');
+            return $this->auth->isGranted('ROLE_USER');
         }
 
         $post = $subject;
