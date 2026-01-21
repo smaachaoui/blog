@@ -1,3 +1,4 @@
-body {
-    background-color: skyblue;
+.page-card {
+    border: 0;
+    border-radius: 0.75rem;
 }
