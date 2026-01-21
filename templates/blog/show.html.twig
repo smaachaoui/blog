@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block body %}
+<article class="card shadow-sm page-card">
+    <div class="card-body p-4">
+        <h1 class="h4 mb-1">{{ post.title }}</h1>
+        <div class="text-muted small mb-4">
+            {{ post.bookAuthor }} · {{ post.category.name }} · {{ post.createdAt|date('d/m/Y') }}
+        </div>
+
+        <div class="mb-4">
+            {{ post.content|nl2br }}
+        </div>
+
+        <a href="{{ path('app_home') }}" class="btn btn-outline-dark btn-sm">Retour</a>
+    </div>
+</article>
+{% endblock %}
