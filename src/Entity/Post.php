@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 #[ORM\Table(name: 'post')]
-#[ORM\UniqueConstraint(name: 'uniq_category_slug', columns: ['slug'])]
+#[ORM\UniqueConstraint(name: 'uniq_post_slug', columns: ['slug'])]
 class Post
 {
     #[ORM\Id]
@@ -35,7 +35,7 @@ class Post
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updateAt = null;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
@@ -128,14 +128,14 @@ class Post
         return $this;
     }
 
-    public function getUpdateAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updateAt;
+        return $this->updatedAt;
     }
 
-    public function setUpdateAt(?\DateTimeImmutable $updateAt): static
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
-        $this->updateAt = $updateAt;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
