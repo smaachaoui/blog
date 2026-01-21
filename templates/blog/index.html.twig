@@ -3,40 +3,84 @@
 {% block title %}Blog{% endblock %}
 
 {% block body %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="h4 mb-0">Derniers articles</h1>
-</div>
 
-<div class="row g-3">
-    {% for post in posts %}
-        <div class="col-12 col-md-6">
-            <div class="card shadow-sm page-card h-100">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start gap-3">
-                        <div>
-                            <h2 class="h5 mb-1">
-                                <a class="text-decoration-none text-dark" href="{{ path('blog_show', {slug: post.slug}) }}">
-                                    {{ post.title }}
-                                </a>
-                            </h2>
-                            <div class="text-muted small">
-                                {{ post.bookAuthor }} · {{ post.category.name }} · {{ post.createdAt|date('d/m/Y') }}
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher un article…" value="{{ query|default('') }}">
+            <button class="btn btn-dark">Rechercher</button>
+            {% if query %}
+                <a class="btn btn-outline-dark" href="{{ path('app_home') }}">Réinitialiser</a>
+            {% endif %}
+        </div>
+    </form>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">Derniers articles</h1>
+    </div>
+
+    <div class="row g-3">
+        {% for post in posts %}
+            <div class="col-12 col-md-6">
+                <div class="card shadow-sm page-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div>
+                                <h2 class="h5 mb-1">
+                                    <a class="text-decoration-none text-dark" href="{{ path('blog_show', {slug: post.slug}) }}">
+                                        {{ post.title }}
+                                    </a>
+                                </h2>
+                                <div class="text-muted small">
+                                    {{ post.bookAuthor }} · {{ post.category.name }} · {{ post.createdAt|date('d/m/Y') }}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="mt-3">
-                        <a href="{{ path('blog_show', {slug: post.slug}) }}" class="btn btn-outline-dark btn-sm">
-                            Lire
-                        </a>
+                        <div class="mt-3">
+                            <a href="{{ path('blog_show', {slug: post.slug}) }}" class="btn btn-outline-dark btn-sm">
+                                Lire
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    {% else %}
-        <div class="col-12">
-            <div class="text-muted">Aucun article pour le moment.</div>
-        </div>
-    {% endfor %}
-</div>
+        {% else %}
+            <div class="col-12">
+                <div class="text-muted">Aucun article pour le moment.</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if totalPages > 1 %}
+        <nav class="mt-4" aria-label="Pagination">
+            <ul class="pagination justify-content-center mb-0">
+                <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
+                    <a class="page-link text-dark"
+                    href="{{ path('app_home', { page: currentPage - 1, q: query }) }}"
+                    aria-label="Page précédente">
+                        Précédent
+                    </a>
+                </li>
+
+                {% for p in 1..totalPages %}
+                    <li class="page-item {{ p == currentPage ? 'active' }}">
+                        <a class="page-link {{ p == currentPage ? 'text-white bg-dark border-dark' : 'text-dark' }}"
+                        href="{{ path('app_home', { page: p, q: query }) }}">
+                            {{ p }}
+                        </a>
+                    </li>
+                {% endfor %}
+
+                <li class="page-item {{ currentPage >= totalPages ? 'disabled' }}">
+                    <a class="page-link text-dark"
+                    href="{{ path('app_home', { page: currentPage + 1, q: query }) }}"
+                    aria-label="Page suivante">
+                        Suivant
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    {% endif %}
+
+
 {% endblock %}
