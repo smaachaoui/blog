@@ -16,6 +16,38 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
+    public function search(?string $query, int $limit, int $offset): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->orderBy('p.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset);
+
+        if ($query) {
+            $qb
+                ->andWhere('p.title LIKE :q OR p.bookAuthor LIKE :q OR p.content LIKE :q')
+                ->setParameter('q', '%' . $query . '%');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function countSearch(?string $query): int
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)');
+
+        if ($query) {
+            $qb
+                ->andWhere('p.title LIKE :q OR p.bookAuthor LIKE :q OR p.content LIKE :q')
+                ->setParameter('q', '%' . $query . '%');
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+
+
 //    /**
 //     * @return Post[] Returns an array of Post objects
 //     */
