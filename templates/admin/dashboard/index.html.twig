@@ -9,8 +9,8 @@
 
         <ul class="mb-0">
             <li><a href="{{ path('admin_category_index') }}">Catégories</a></li>
-            <li><a href="#">Articles</a></li>
-            <li><a href="#">Commentaires</a></li>
+            <li><a href="{{ path('admin_post_index') }}">Articles</a></li>
+            <li><a href="{{ path('admin_comment_index', {pending: 1}) }}">Commentaires (en attente)</a></li>
         </ul>
     </div>
 </div>
