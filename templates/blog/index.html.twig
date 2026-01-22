@@ -34,7 +34,9 @@
                                     </a>
                                 </h2>
                                 <div class="text-muted small">
-                                    {{ post.bookAuthor }} · {{ post.category.name }} · {{ post.createdAt|date('d/m/Y') }}
+                                    {{ post.bookAuthor }}
+                                    · <a class="text-decoration-none text-muted" href="{{ path('category_show', {slug: post.category.slug}) }}">{{ post.category.name }}</a>
+                                    · {{ post.createdAt|date('d/m/Y') }}
                                 </div>
                             </div>
                         </div>

@@ -6,9 +6,12 @@
     <article class="card shadow-sm page-card">
         <div class="card-body p-4">
             <h1 class="h4 mb-1">{{ post.title }}</h1>
-            <div class="text-muted small mb-4">
-                {{ post.bookAuthor }} · {{ post.category.name }} · {{ post.createdAt|date('d/m/Y') }}
+            <div class="text-muted small mb-3">
+                {{ post.bookAuthor }}
+                · <a class="text-decoration-none text-muted" href="{{ path('category_show', {slug: post.category.slug}) }}">{{ post.category.name }}</a>
+                · {{ post.createdAt|date('d/m/Y') }}
             </div>
+
 
             {% if post.coverImage %}
                 <img src="{{ asset('uploads/covers/' ~ post.coverImage) }}" alt="Couverture" class="img-fluid rounded mb-4">
