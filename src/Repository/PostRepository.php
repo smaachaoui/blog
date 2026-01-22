@@ -46,30 +46,33 @@ class PostRepository extends ServiceEntityRepository
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
+    public function searchInCategory(int $categoryId, string $q, int $limit, int $offset): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.category = :categoryId')
+            ->andWhere('p.title LIKE :q OR p.bookAuthor LIKE :q OR p.content LIKE :q')
+            ->setParameter('categoryId', $categoryId)
+            ->setParameter('q', '%'.$q.'%')
+            ->orderBy('p.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countSearchInCategory(int $categoryId, string $q): int
+    {
+        return (int) $this->createQueryBuilder('p')
+            ->select('COUNT(p.id)')
+            ->andWhere('p.category = :categoryId')
+            ->andWhere('p.title LIKE :q OR p.bookAuthor LIKE :q OR p.content LIKE :q')
+            ->setParameter('categoryId', $categoryId)
+            ->setParameter('q', '%'.$q.'%')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
 
-//    /**
-//     * @return Post[] Returns an array of Post objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Post
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+
 }
