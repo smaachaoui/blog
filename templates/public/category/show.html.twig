@@ -6,6 +6,20 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="h4 mb-0">{{ category.name }}</h1>
     <a class="btn btn-outline-dark btn-sm" href="{{ path('category_index') }}">Toutes les catégories</a>
+
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input
+                type="text"
+                name="q"
+                class="form-control"
+                placeholder="Rechercher dans cette catégorie…"
+                value="{{ query }}"
+            >
+            <button class="btn btn-dark">Rechercher</button>
+        </div>
+    </form>
+
 </div>
 
 <div class="row g-3">
@@ -45,32 +59,11 @@
     {% endfor %}
 </div>
 
-{% if totalPages > 1 %}
-<nav class="mt-4" aria-label="Pagination">
-    <ul class="pagination justify-content-center mb-0">
-        <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
-            <a class="page-link text-dark"
-               href="{{ path('category_show', {slug: category.slug, page: currentPage - 1}) }}">
-                Précédent
-            </a>
-        </li>
+    {% include 'partials/_pagination.html.twig' with {
+        route: 'category_show',
+        currentPage: currentPage,
+        totalPages: totalPages,
+        params: { slug: category.slug, q: query }
+    } %}
 
-        {% for p in 1..totalPages %}
-            <li class="page-item {{ p == currentPage ? 'active' }}">
-                <a class="page-link {{ p == currentPage ? 'text-white bg-dark border-dark' : 'text-dark' }}"
-                   href="{{ path('category_show', {slug: category.slug, page: p}) }}">
-                    {{ p }}
-                </a>
-            </li>
-        {% endfor %}
-
-        <li class="page-item {{ currentPage >= totalPages ? 'disabled' }}">
-            <a class="page-link text-dark"
-               href="{{ path('category_show', {slug: category.slug, page: currentPage + 1}) }}">
-                Suivant
-            </a>
-        </li>
-    </ul>
-</nav>
-{% endif %}
 {% endblock %}

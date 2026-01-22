@@ -56,36 +56,13 @@
         {% endfor %}
     </div>
 
-    {% if totalPages > 1 %}
-        <nav class="mt-4" aria-label="Pagination">
-            <ul class="pagination justify-content-center mb-0">
-                <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
-                    <a class="page-link text-dark"
-                    href="{{ path('app_home', { page: currentPage - 1, q: query }) }}"
-                    aria-label="Page précédente">
-                        Précédent
-                    </a>
-                </li>
+    {% include 'partials/_pagination.html.twig' with {
+        route: 'app_home',
+        currentPage: currentPage,
+        totalPages: totalPages,
+        params: { q: query }
+    } %}
 
-                {% for p in 1..totalPages %}
-                    <li class="page-item {{ p == currentPage ? 'active' }}">
-                        <a class="page-link {{ p == currentPage ? 'text-white bg-dark border-dark' : 'text-dark' }}"
-                        href="{{ path('app_home', { page: p, q: query }) }}">
-                            {{ p }}
-                        </a>
-                    </li>
-                {% endfor %}
-
-                <li class="page-item {{ currentPage >= totalPages ? 'disabled' }}">
-                    <a class="page-link text-dark"
-                    href="{{ path('app_home', { page: currentPage + 1, q: query }) }}"
-                    aria-label="Page suivante">
-                        Suivant
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    {% endif %}
 
 
 {% endblock %}

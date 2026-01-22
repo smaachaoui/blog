@@ -1,0 +1,28 @@
+{% if totalPages > 1 %}
+<nav class="mt-4" aria-label="Pagination">
+    <ul class="pagination justify-content-center mb-0">
+        <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
+            <a class="page-link text-dark"
+               href="{{ path(route, params|merge({page: currentPage - 1})) }}">
+                Précédent
+            </a>
+        </li>
+
+        {% for p in 1..totalPages %}
+            <li class="page-item {{ p == currentPage ? 'active' }}">
+                <a class="page-link {{ p == currentPage ? 'text-white bg-dark border-dark' : 'text-dark' }}"
+                   href="{{ path(route, params|merge({page: p})) }}">
+                    {{ p }}
+                </a>
+            </li>
+        {% endfor %}
+
+        <li class="page-item {{ currentPage >= totalPages ? 'disabled' }}">
+            <a class="page-link text-dark"
+               href="{{ path(route, params|merge({page: currentPage + 1})) }}">
+                Suivant
+            </a>
+        </li>
+    </ul>
+</nav>
+{% endif %}

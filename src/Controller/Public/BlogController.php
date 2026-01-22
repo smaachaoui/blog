@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Public;
 
 use App\Entity\Post;
 use App\Repository\PostRepository;
@@ -35,7 +35,7 @@ class BlogController extends AbstractController
 
         $totalPages = (int) ceil($total / $limit);
 
-        return $this->render('blog/index.html.twig', [
+        return $this->render('public/blog/index.html.twig', [
             'posts' => $posts,
             'currentPage' => $page,
             'totalPages' => $totalPages,
@@ -70,7 +70,7 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('blog_show', ['slug' => $slug], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('blog/show.html.twig', [
+        return $this->render('public/blog/show.html.twig', [
             'post' => $post,
             'comments' => $commentRepository->findApprovedForPost($post->getId()),
             'commentForm' => $form,

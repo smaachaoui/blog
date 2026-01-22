@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Public;
 
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
@@ -9,12 +9,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class CategoryPublicController extends AbstractController
+class CategoryController extends AbstractController
 {
     #[Route('/categories', name: 'category_index', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepository): Response
     {
-        return $this->render('category_public/index.html.twig', [
+        return $this->render('public/category/index.html.twig', [
             'categories' => $categoryRepository->findBy([], ['name' => 'ASC']),
         ]);
     }
@@ -52,7 +52,7 @@ class CategoryPublicController extends AbstractController
 
         $totalPages = (int) ceil($total / $limit);
 
-        return $this->render('category_public/show.html.twig', [
+        return $this->render('public/category/show.html.twig', [
             'category' => $category,
             'posts' => $posts,
             'currentPage' => $page,
