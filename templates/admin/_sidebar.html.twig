@@ -1,0 +1,41 @@
+<div class="card shadow-sm">
+    <div class="card-body p-3 bg-dark text-white rounded">
+        <div class="fw-semibold">Administration</div>
+        <div class="small text-white-50">Back-office</div>
+    </div>
+
+    <div class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action"
+           href="{{ path('admin_dashboard') }}">
+            Tableau de bord
+        </a>
+
+        <a class="list-group-item list-group-item-action"
+           href="{{ path('admin_user_index') }}">
+            Utilisateurs
+        </a>
+
+        <a class="list-group-item list-group-item-action"
+           href="{{ path('admin_post_index') }}">
+            Articles
+        </a>
+
+        <a class="list-group-item list-group-item-action"
+           href="{{ path('admin_category_index') }}">
+            Catégories
+        </a>
+
+        <a class="list-group-item list-group-item-action"
+           href="{{ path('admin_comment_index') }}">
+            Commentaires
+        </a>
+
+        <div class="list-group-item">
+            <a href="{{ path('app_home') }}" class="text-decoration-none">Retour au site</a>
+        </div>
+
+        <div class="list-group-item">
+            <a href="{{ path('app_logout') }}" class="text-decoration-none text-danger">Déconnexion</a>
+        </div>
+    </div>
+</div>
