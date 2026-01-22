@@ -22,26 +22,42 @@ use Symfony\Component\HttpFoundation\Request;
 class BlogController extends AbstractController
 {
     #[Route('/', name: 'app_home', methods: ['GET'])]
-    public function home(Request $request, PostRepository $postRepository): Response
+    public function home(PostRepository $postRepository): Response
     {
-        $page = max(1, $request->query->getInt('page', 1));
-        $query = $request->query->get('q');
+        $latestPosts = $postRepository->findBy([], ['createdAt' => 'DESC'], 6);
 
-        $limit = 6;
+        return $this->render('public/home/index.html.twig', [
+            'posts' => $latestPosts,
+        ]);
+    }
+
+
+    #[Route('/articles', name: 'blog_index', methods: ['GET'])]
+    public function index(Request $request, PostRepository $postRepository): Response
+    {
+        $q = trim((string) $request->query->get('q', ''));
+        $page = max(1, (int) $request->query->get('page', 1));
+        $limit = 9;
         $offset = ($page - 1) * $limit;
 
-        $posts = $postRepository->search($query, $limit, $offset);
-        $total = $postRepository->countSearch($query);
+        if ($q !== '') {
+            $posts = $postRepository->search($q, $limit, $offset);
+            $total = $postRepository->countSearch($q);
+        } else {
+            $posts = $postRepository->findBy([], ['createdAt' => 'DESC'], $limit, $offset);
+            $total = $postRepository->count([]);
+        }
 
         $totalPages = (int) ceil($total / $limit);
 
         return $this->render('public/blog/index.html.twig', [
             'posts' => $posts,
+            'query' => $q,
             'currentPage' => $page,
             'totalPages' => $totalPages,
-            'query' => $query,
         ]);
     }
+
 
 
     #[Route('/blog/{slug}', name: 'blog_show', methods: ['GET', 'POST'])]
