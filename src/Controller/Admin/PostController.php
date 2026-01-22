@@ -8,6 +8,7 @@ use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +27,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_post_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $this->denyAccessUnlessGranted(\App\Security\Voter\PostVoter::CREATE);
         $post = new Post();
@@ -44,6 +45,12 @@ class PostController extends AbstractController
                 $coverFile->move($this->getParameter('covers_directory'), $filename);
                 $post->setCoverImage($filename);
             }
+
+            if (!$post->getSlug()) {
+                $baseSlug = strtolower($slugger->slug($post->getTitle())->toString());
+                $post->setSlug($this->makeUniquePostSlug($baseSlug, $entityManager));
+            }
+
 
             $entityManager->flush();
 
@@ -65,7 +72,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_post_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Post $post, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $this->denyAccessUnlessGranted(\App\Security\Voter\PostVoter::EDIT, $post);
         $form = $this->createForm(PostType::class, $post);
@@ -93,6 +100,14 @@ class PostController extends AbstractController
             }
 
             $post->setUpdatedAt(new \DateTimeImmutable());
+
+            if (!$post->getSlug()) {
+                $baseSlug = strtolower($slugger->slug($post->getTitle())->toString());
+                $post->setSlug($this->makeUniquePostSlug($baseSlug, $entityManager));
+            }
+
+            $post->setUpdatedAt(new \DateTimeImmutable());
+
 
             $entityManager->flush();
 
@@ -126,4 +141,18 @@ class PostController extends AbstractController
 
         return $this->redirectToRoute('admin_post_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    private function makeUniquePostSlug(string $baseSlug, EntityManagerInterface $entityManager): string
+    {
+        $slug = $baseSlug;
+        $i = 2;
+
+        while ($entityManager->getRepository(Post::class)->findOneBy(['slug' => $slug]) !== null) {
+            $slug = $baseSlug.'-'.$i;
+            $i++;
+        }
+
+        return $slug;
+    }
+
 }
