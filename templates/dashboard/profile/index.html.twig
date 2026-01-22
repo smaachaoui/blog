@@ -1,37 +1,24 @@
-{% extends 'base.html.twig' %}
+{% extends 'dashboard/base.html.twig' %}
+
 
 {% block title %}Mon profil{% endblock %}
 
-{% block body %}
-<div class="row justify-content-center">
-    <div class="col-12 col-lg-8">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h1 class="h4 mb-3">Mon profil</h1>
+{% block dashboard_content %}
+<div class="card shadow-sm">
+    <div class="card-body p-4">
+        <h1 class="h4 mb-3">Informations personnelles</h1>
 
-                <dl class="row mb-4">
-                    <dt class="col-sm-4 text-muted">Email</dt>
-                    <dd class="col-sm-8 mb-2">{{ app.user.email }}</dd>
+        <dl class="row mb-0">
+            <dt class="col-sm-4 text-muted">Email</dt>
+            <dd class="col-sm-8">{{ app.user.email }}</dd>
 
-                </dl>
-
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="{{ path('dashboard_post_index') }}" class="btn btn-outline-dark">
-                        Mes articles
-                    </a>
-
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <a href="{{ path('admin_dashboard') }}" class="btn btn-dark">
-                            Administration
-                        </a>
-                    {% endif %}
-
-                    <a href="{{ path('app_logout') }}" class="btn btn-outline-danger ms-auto">
-                        Déconnexion
-                    </a>
-                </div>
-            </div>
-        </div>
+            <dt class="col-sm-4 text-muted">Rôles</dt>
+            <dd class="col-sm-8">
+                {% set roles = app.user.roles|map(r => r|replace({'ROLE_':'', '_':' '})|lower|title) %}
+                {{ roles|join(', ') }}
+            </dd>
+        </dl>
     </div>
 </div>
 {% endblock %}
+

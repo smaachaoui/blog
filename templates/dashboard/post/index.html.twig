@@ -1,50 +1,59 @@
-{% extends 'base.html.twig' %}
+{% extends 'dashboard/base.html.twig' %}
 
 {% block title %}Mes articles{% endblock %}
 
-{% block body %}
-<div class="card shadow-sm page-card">
-    <div class="card-body p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="h4 mb-0">Mes articles</h1>
-            <a href="{{ path('dashboard_post_new') }}" class="btn btn-dark btn-sm">Nouvel article</a>
+{% block dashboard_content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Mes articles</h1>
+    <a class="btn btn-dark btn-sm" href="{{ path('dashboard_post_new') }}">Nouvel article</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Titre</th>
+                        <th>Catégorie</th>
+                        <th>Date</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for post in posts %}
+                    <tr>
+                        <td class="fw-semibold">{{ post.title }}</td>
+                        <td class="text-muted">{{ post.category.name }}</td>
+                        <td class="text-muted">{{ post.createdAt|date('d/m/Y') }}</td>
+                        <td class="text-end">
+                            <a class="btn btn-outline-dark btn-sm"
+                               href="{{ path('blog_show', {slug: post.slug}) }}">
+                                Voir
+                            </a>
+
+                            <a class="btn btn-outline-dark btn-sm"
+                               href="{{ path('dashboard_post_edit', {id: post.id}) }}">
+                                Modifier
+                            </a>
+
+                            <form method="post"
+                                  action="{{ path('dashboard_post_delete', {id: post.id}) }}"
+                                  class="d-inline"
+                                  onsubmit="return confirm('Supprimer cet article ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                <button class="btn btn-outline-danger btn-sm">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">Aucun article.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
-
-        <table class="table table-hover align-middle mb-0">
-            <thead>
-                <tr>
-                    <th>Titre</th>
-                    <th>Catégorie</th>
-                    <th>Date</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for post in posts %}
-                <tr>
-                    <td>{{ post.title }}</td>
-                    <td>{{ post.category.name }}</td>
-                    <td>{{ post.createdAt|date('d/m/Y') }}</td>
-                    <td class="text-end">
-                        {% if is_granted('POST_EDIT', post) %}
-                            <a href="{{ path('dashboard_post_edit', {id: post.id}) }}" class="btn btn-sm btn-outline-dark">Éditer</a>
-                        {% endif %}
-
-                        <form method="post" action="{{ path('dashboard_post_delete', {id: post.id}) }}" class="d-inline">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-                            {% if is_granted('POST_DELETE', post) %}
-                                <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Supprimer cet article ?')">Supprimer</button>
-                            {% endif %}
-                        </form>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4" class="text-center text-muted">Aucun article</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
     </div>
 </div>
 {% endblock %}
