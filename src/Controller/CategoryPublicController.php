@@ -34,15 +34,22 @@ class CategoryPublicController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
         $limit = 6;
         $offset = ($page - 1) * $limit;
+        $q = trim((string) $request->query->get('q', ''));
 
+
+        if ($q !== '') {
+            $posts = $postRepository->searchInCategory($category->getId(), $q, $limit, $offset);
+            $total = $postRepository->countSearchInCategory($category->getId(), $q);
+        } else {
         $posts = $postRepository->findBy(
             ['category' => $category],
             ['createdAt' => 'DESC'],
             $limit,
             $offset
         );
-
         $total = $postRepository->count(['category' => $category]);
+    }
+
         $totalPages = (int) ceil($total / $limit);
 
         return $this->render('category_public/show.html.twig', [
@@ -50,6 +57,7 @@ class CategoryPublicController extends AbstractController
             'posts' => $posts,
             'currentPage' => $page,
             'totalPages' => $totalPages,
+            'query' => $q,
         ]);
     }
 }
