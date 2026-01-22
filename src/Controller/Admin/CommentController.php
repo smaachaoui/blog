@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Comment;
 use App\Form\Admin\CommentAdminType;
-
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +28,7 @@ final class CommentController extends AbstractController
             $criteria['isApproved'] = false;
         }
 
-        return $this->render('comment/index.html.twig', [
+        return $this->render('admin/comment/index.html.twig', [
             'comments' => $commentRepository->findBy($criteria, ['createdAt' => 'DESC']),
             'pending' => $pending,
         ]);
@@ -39,7 +38,7 @@ final class CommentController extends AbstractController
     #[Route('/{id}', name: 'admin_comment_show', methods: ['GET'])]
     public function show(Comment $comment): Response
     {
-        return $this->render('comment/show.html.twig', [
+        return $this->render('admin/comment/show.html.twig', [
             'comment' => $comment,
         ]);
     }
@@ -71,7 +70,7 @@ final class CommentController extends AbstractController
             return $this->redirectToRoute('admin_comment_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('comment/edit.html.twig', [
+        return $this->render('admin/comment/edit.html.twig', [
             'comment' => $comment,
             'form' => $form,
         ]);
