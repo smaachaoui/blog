@@ -2,6 +2,8 @@
 
 namespace App\Controller\Dashboard;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Filesystem\Filesystem;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
@@ -40,6 +42,15 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($post);
+            /** @var UploadedFile|null $coverFile */
+            $coverFile = $form->get('coverImageFile')->getData();
+
+            if ($coverFile !== null) {
+                $filename = bin2hex(random_bytes(16)).'.'.($coverFile->guessExtension() ?: 'bin');
+                $coverFile->move($this->getParameter('covers_directory'), $filename);
+                $post->setCoverImage($filename);
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('dashboard_post_index', [], Response::HTTP_SEE_OTHER);
@@ -61,6 +72,27 @@ class PostController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $post->setUpdatedAt(new \DateTimeImmutable());
+            /** @var UploadedFile|null $coverFile */
+            $coverFile = $form->get('coverImageFile')->getData();
+
+            if ($coverFile !== null) {
+                $filesystem = new Filesystem();
+
+                $oldFilename = $post->getCoverImage();
+                if ($oldFilename) {
+                    $oldPath = $this->getParameter('covers_directory').'/'.$oldFilename;
+                    if ($filesystem->exists($oldPath)) {
+                        $filesystem->remove($oldPath);
+                    }
+                }
+
+                $filename = bin2hex(random_bytes(16)).'.'.($coverFile->guessExtension() ?: 'bin');
+                $coverFile->move($this->getParameter('covers_directory'), $filename);
+                $post->setCoverImage($filename);
+            }
+
+            $post->setUpdatedAt(new \DateTimeImmutable());
+
             $entityManager->flush();
 
             return $this->redirectToRoute('dashboard_post_index', [], Response::HTTP_SEE_OTHER);
