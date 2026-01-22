@@ -1,34 +1,65 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}Utilisateur{% endblock %}
 
 {% block admin_content %}
-    <h1>User</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ user.password }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+    <div>
+        <h1 class="h4 mb-1">Détails utilisateur</h1>
+        <p class="text-muted mb-0">Consulter les informations du compte.</p>
+    </div>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-dark btn-sm" href="{{ path('admin_user_index') }}">
+            Retour à la liste
+        </a>
+        <a class="btn btn-dark btn-sm" href="{{ path('admin_user_edit', {'id': user.id}) }}">
+            Modifier
+        </a>
+    </div>
+</div>
 
-    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+<div class="row g-3">
+    <div class="col-12 col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 text-muted">ID</dt>
+                    <dd class="col-sm-8">{{ user.id }}</dd>
 
-    {{ include('user/_delete_form.html.twig') }}
+                    <dt class="col-sm-4 text-muted">Email</dt>
+                    <dd class="col-sm-8">{{ user.email }}</dd>
+
+                    <dt class="col-sm-4 text-muted">Rôles</dt>
+                    <dd class="col-sm-8">
+                        {% set roles = user.roles|default([]) %}
+                        {% if roles is empty %}
+                            <span class="text-muted">—</span>
+                        {% else %}
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for role in roles %}
+                                    {% set label = role|replace({'ROLE_':'', '_':' '})|lower|title %}
+                                    <span class="badge text-bg-dark">{{ label }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+        <div class="card border-danger shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h6 text-danger mb-2">Zone dangereuse</h2>
+                <p class="text-muted small mb-3">La suppression est définitive.</p>
+
+                {{ include('admin/user/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

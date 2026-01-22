@@ -1,5 +1,39 @@
-<footer class="bg-dark text-white py-3 mt-auto">
-    <div class="container text-center small">
-        © {{ "now"|date("Y") }} — Blog Littéraire
+<footer class="bg-dark text-white mt-auto">
+    <div class="container py-4">
+        <div class="row align-items-center g-3">
+            <div class="col-12 col-md-6 text-center text-md-start small">
+                © {{ "now"|date("Y") }} | Seifeddine Maachaoui | Blog Littéraire
+            </div>
+
+            <div class="col-12 col-md-6">
+                <ul class="list-inline text-center text-md-end mb-0 small">
+                    <li class="list-inline-item">
+                        <a href="{{ path('app_home') }}" class="text-white-50 text-decoration-none">
+                            Accueil
+                        </a>
+                    </li>
+
+                    <li class="list-inline-item">
+                        <a href="{{ path('blog_index') }}" class="text-white-50 text-decoration-none">
+                            Articles
+                        </a>
+                    </li>
+
+                    <li class="list-inline-item">
+                        <a href="{{ path('category_index') }}" class="text-white-50 text-decoration-none">
+                            Catégories
+                        </a>
+                    </li>
+
+                    {% if app.user %}
+                        <li class="list-inline-item">
+                            <a href="{{ path('app_profile') }}" class="text-white-50 text-decoration-none">
+                                Mon profil
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </div>
 </footer>

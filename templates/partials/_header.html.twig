@@ -3,38 +3,69 @@
         <div class="container">
             <a class="navbar-brand" href="{{ path('app_home') }}">Blog Littéraire</a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Basculer la navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
+                        <a class="nav-link {{ app.request.attributes.get('_route') == 'app_home' ? 'active' : '' }}"
+                           href="{{ path('app_home') }}">
+                            Accueil
+                        </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_home') }}">Articles</a>
+                        <a class="nav-link {{ app.request.attributes.get('_route') starts with 'blog_' ? 'active' : '' }}"
+                           href="{{ path('blog_index') }}">
+                            Articles
+                        </a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('category_index') }}">Catégories</a>
+                        <a class="nav-link {{ app.request.attributes.get('_route') starts with 'category_' ? 'active' : '' }}"
+                           href="{{ path('category_index') }}">
+                            Catégories
+                        </a>
                     </li>
 
                     {% if app.user %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_profile') }}">Mon profil</a>
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'app_profile' ? 'active' : '' }}"
+                               href="{{ path('app_profile') }}">
+                                Mon profil
+                            </a>
                         </li>
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li class="nav-item">
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_' ? 'active' : '' }}"
+                                   href="{{ path('admin_dashboard') }}">
+                                    Admin
+                                </a>
+                            </li>
+                        {% endif %}
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'app_login' ? 'active' : '' }}"
+                               href="{{ path('app_login') }}">
+                                Connexion
+                            </a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                            <a class="nav-link {{ app.request.attributes.get('_route') == 'app_register' ? 'active' : '' }}"
+                               href="{{ path('app_register') }}">
+                                Inscription
+                            </a>
                         </li>
                     {% endif %}
-
                 </ul>
             </div>
         </div>
