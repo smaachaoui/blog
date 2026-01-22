@@ -70,7 +70,12 @@ final class CommentController extends AbstractController
             return $this->redirectToRoute('admin_comment_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/comment/edit.html.twig', [
+        return $this->render('admin/comment/form.html.twig', [
+            'page_title' => 'Modifier un commentaire',
+            'heading' => 'Modifier un commentaire',
+            'button_label' => 'Enregistrer',
+            'show_delete' => true,
+
             'comment' => $comment,
             'form' => $form,
         ]);

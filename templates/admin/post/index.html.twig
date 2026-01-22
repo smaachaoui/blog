@@ -1,56 +1,155 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Post index{% endblock %}
+{% block title %}Articles{% endblock %}
 
 {% block admin_content %}
-    <h1>Post index</h1>
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+        <h1 class="h4 mb-1">Articles</h1>
+        <div class="text-muted small">Gestion des articles du blog.</div>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Slug</th>
-                <th>BookAuthor</th>
-                <th>Content</th>
-                <th>CoverImage</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for post in posts %}
-            <tr>
-                <td>{{ post.id }}</td>
-                <td>{{ post.title }}</td>
-                <td>{{ post.slug }}</td>
-                <td>{{ post.bookAuthor }}</td>
-                <td>{{ post.content }}</td>
-                <td>{{ post.coverImage }}</td>
-                <td>{{ post.createdAt ? post.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ post.updatedAt ? post.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('admin_post_show', {'id': post.id}) }}">show</a>
-                    
-                    {% if is_granted('POST_EDIT', post) %}
-                        <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn btn-sm btn-outline-dark">Éditer</a>
-                    {% endif %}
+    <a href="{{ path('admin_post_new') }}" class="btn btn-dark">
+        + Nouvel article
+    </a>
+</div>
 
-                    {% if is_granted('POST_DELETE', post) %}
-                        {# bouton delete #}
-                    {% endif %}
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-nowrap">ID</th>
+                        <th>Article</th>
+                        <th class="text-nowrap">Catégorie</th>
+                        <th class="text-nowrap">Auteur</th>
+                        <th class="text-nowrap">Dates</th>
+                        <th class="text-end text-nowrap">Actions</th>
+                    </tr>
+                </thead>
 
+                <tbody>
+                {% for post in posts %}
+                    <tr>
+                        <td class="text-nowrap">
+                            <span class="badge text-bg-dark">#{{ post.id }}</span>
+                        </td>
 
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                        <td style="min-width: 320px;">
+                            <div class="d-flex gap-3">
+                                <div class="flex-shrink-0" style="width:64px;">
+                                    {% if post.coverImage %}
+                                        <img
+                                            src="{{ asset('uploads/covers/' ~ post.coverImage) }}"
+                                            alt="Couverture"
+                                            class="img-fluid rounded border"
+                                            style="width:64px; height:64px; object-fit:cover;"
+                                            loading="lazy"
+                                        >
+                                    {% else %}
+                                        <div class="rounded border bg-light d-flex align-items-center justify-content-center"
+                                             style="width:64px; height:64px;">
+                                            <span class="text-muted small">—</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
 
-    <a href="{{ path('admin_post_new') }}">Create new</a>
+                                <div class="min-w-0">
+                                    <div class="fw-semibold text-truncate">
+                                        {{ post.title }}
+                                    </div>
+
+                                    <div class="text-muted small text-truncate">
+                                        <span class="me-2">Slug :</span>
+                                        <code class="text-muted">{{ post.slug }}</code>
+                                    </div>
+
+                                    <div class="text-muted small text-truncate">
+                                        <span class="me-2">Livre :</span>
+                                        {{ post.bookAuthor }}
+                                    </div>
+
+                                    <div class="text-muted small">
+                                        {{ post.content|striptags|slice(0, 90) }}{% if post.content|length > 90 %}…{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="text-nowrap">
+                            {% if post.category is defined and post.category %}
+                                <span class="badge text-bg-light border">
+                                    {{ post.category.name }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted small">—</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-nowrap">
+                            {% if post.author is defined and post.author %}
+                                <span class="text-muted small">{{ post.author.email }}</span>
+                            {% else %}
+                                <span class="text-muted small">—</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-nowrap">
+                            <div class="small">
+                                <div>
+                                    <span class="text-muted">Créé :</span>
+                                    {{ post.createdAt ? post.createdAt|date('d/m/Y H:i') : '—' }}
+                                </div>
+                                <div>
+                                    <span class="text-muted">MAJ :</span>
+                                    {{ post.updatedAt ? post.updatedAt|date('d/m/Y H:i') : '—' }}
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="text-end text-nowrap">
+                            <a href="{{ path('admin_post_show', {'id': post.id}) }}"
+                               class="btn btn-sm btn-outline-dark">
+                                Voir
+                            </a>
+
+                            {% if is_granted('POST_EDIT', post) %}
+                                <a href="{{ path('admin_post_edit', {id: post.id}) }}"
+                                   class="btn btn-sm btn-dark">
+                                    Éditer
+                                </a>
+                            {% endif %}
+
+                            {% if is_granted('POST_DELETE', post) %}
+                                {# Option A : lien vers page show (où tu as déjà le delete form) #}
+                                {# <a href="{{ path('admin_post_show', {'id': post.id}) }}" class="btn btn-sm btn-outline-danger">Supprimer</a> #}
+
+                                {# Option B : mini form delete direct (recommandé) #}
+                                <form method="post"
+                                      action="{{ path('admin_post_delete', {'id': post.id}) }}"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Supprimer cet article ? Cette action est définitive.');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="p-4">
+                            <div class="text-center text-muted">
+                                Aucun article trouvé.
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

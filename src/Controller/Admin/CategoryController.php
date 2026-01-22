@@ -11,7 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/categories')]
 class CategoryController extends AbstractController
 {
@@ -43,7 +45,12 @@ class CategoryController extends AbstractController
             return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/category/new.html.twig', [
+        return $this->render('admin/category/form.html.twig', [
+            'page_title' => 'Créer une catégorie',
+            'heading' => 'Créer une catégorie',
+            'button_label' => 'Créer',
+            'show_delete' => false,
+
             'category' => $category,
             'form' => $form,
         ]);
@@ -74,7 +81,12 @@ class CategoryController extends AbstractController
             return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/category/edit.html.twig', [
+        return $this->render('admin/category/form.html.twig', [
+            'page_title' => 'Modifier une catégorie',
+            'heading' => 'Modifier une catégorie',
+            'button_label' => 'Enregistrer',
+            'show_delete' => true,
+
             'category' => $category,
             'form' => $form,
         ]);

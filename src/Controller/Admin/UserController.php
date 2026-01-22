@@ -62,7 +62,12 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('admin_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/user/new.html.twig', [
+        return $this->render('admin/user/form.html.twig', [
+            'page_title' => 'Créer un utilisateur',
+            'heading' => 'Créer un utilisateur',
+            'button_label' => 'Créer',
+            'show_delete' => false,
+
             'user' => $user,
             'form' => $form,
         ]);
@@ -111,7 +116,12 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('admin_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/user/edit.html.twig', [
+        return $this->render('admin/user/form.html.twig', [
+            'page_title' => 'Modifier un utilisateur',
+            'heading' => 'Modifier un utilisateur',
+            'button_label' => 'Enregistrer',
+            'show_delete' => true,
+
             'user' => $user,
             'form' => $form,
         ]);

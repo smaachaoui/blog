@@ -1,0 +1,36 @@
+{# Shared User form (Admin) #}
+{% set cancel_route = cancel_route|default('admin_user_index') %}
+{% set cancel_params = cancel_params|default({}) %}
+
+{{ form_start(form) }}
+
+<div class="mb-3">
+    {{ form_row(form.email) }}
+</div>
+
+<div class="mb-3">
+    {{ form_row(form.roles) }}
+</div>
+
+<hr>
+
+<h2 class="h6 mb-2">Sécurité</h2>
+
+<div class="mb-3">
+    {{ form_row(form.plainPassword.first) }}
+</div>
+
+<div class="mb-3">
+    {{ form_row(form.plainPassword.second) }}
+</div>
+
+<div class="d-grid d-sm-flex gap-2 mt-3">
+    <button class="btn btn-dark">
+        {{ button_label|default('Enregistrer') }}
+    </button>
+    <a href="{{ path(cancel_route, cancel_params) }}" class="btn btn-outline-dark">
+        Retour
+    </a>
+</div>
+
+{{ form_end(form) }}

@@ -59,7 +59,12 @@ class PostController extends AbstractController
             return $this->redirectToRoute('admin_post_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/post/new.html.twig', [
+        return $this->render('admin/post/form.html.twig', [
+            'page_title' => 'Créer un article',
+            'heading' => 'Créer un article',
+            'button_label' => 'Créer',
+            'show_delete' => false,
+
             'post' => $post,
             'form' => $form,
         ]);
@@ -101,14 +106,12 @@ class PostController extends AbstractController
                 $post->setCoverImage($filename);
             }
 
-            $post->setUpdatedAt(new \DateTimeImmutable());
 
             if (!$post->getSlug()) {
                 $baseSlug = strtolower($slugger->slug($post->getTitle())->toString());
                 $post->setSlug($this->makeUniquePostSlug($baseSlug, $entityManager));
             }
 
-            $post->setUpdatedAt(new \DateTimeImmutable());
 
 
             $entityManager->flush();
@@ -116,7 +119,12 @@ class PostController extends AbstractController
             return $this->redirectToRoute('admin_post_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/post/edit.html.twig', [
+        return $this->render('admin/post/form.html.twig', [
+            'page_title' => 'Modifier un article',
+            'heading' => 'Modifier un article',
+            'button_label' => 'Enregistrer',
+            'show_delete' => true,
+
             'post' => $post,
             'form' => $form,
         ]);

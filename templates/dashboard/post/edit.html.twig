@@ -7,7 +7,7 @@
     <div class="card-body p-4">
         <h1 class="h4 mb-3">{{ title|default('Article') }}</h1>
 
-        {{ include('post/_form.html.twig') }}
+        {{ include('post/_form.html.twig', {cancel_path: path('dashboard_post_index')}) }}
     </div>
 </div>
 {% endblock %}

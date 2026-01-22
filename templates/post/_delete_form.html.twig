@@ -1,0 +1,14 @@
+{# Shared Post delete form (Admin/Dashboard) #}
+{% set delete_route = delete_route|default('admin_post_delete') %}
+{% set delete_params = delete_params|default({id: post.id}) %}
+{% set confirm_message = confirm_message|default("Supprimer définitivement cet article ?") %}
+
+<form method="post"
+      action="{{ path(delete_route, delete_params) }}"
+      onsubmit="return confirm('{{ confirm_message|e('js') }}');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
+
+    <button class="btn btn-outline-danger w-100">
+        Supprimer
+    </button>
+</form>

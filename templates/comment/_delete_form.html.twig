@@ -1,0 +1,11 @@
+{# Shared Comment delete form (Admin) #}
+{% set delete_route = delete_route|default('admin_comment_delete') %}
+{% set delete_params = delete_params|default({id: comment.id}) %}
+{% set confirm_message = confirm_message|default("Supprimer définitivement ce commentaire ?") %}
+
+<form method="post"
+      action="{{ path(delete_route, delete_params) }}"
+      onsubmit="return confirm('{{ confirm_message|e('js') }}');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+    <button class="btn btn-outline-danger w-100">Supprimer</button>
+</form>
