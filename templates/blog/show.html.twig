@@ -10,6 +10,11 @@
                 {{ post.bookAuthor }} · {{ post.category.name }} · {{ post.createdAt|date('d/m/Y') }}
             </div>
 
+            {% if post.coverImage %}
+                <img src="{{ asset('uploads/covers/' ~ post.coverImage) }}" alt="Couverture" class="img-fluid rounded mb-4">
+            {% endif %}
+
+
             <div class="mb-4">
                 {{ post.content|nl2br }}
             </div>

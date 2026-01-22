@@ -24,6 +24,9 @@
                 <div class="card shadow-sm page-card h-100">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start gap-3">
+                            {% if post.coverImage %}
+                                <img src="{{ asset('uploads/covers/' ~ post.coverImage) }}" alt="Couverture" class="img-fluid rounded mb-3" loading="lazy">
+                            {% endif %}
                             <div>
                                 <h2 class="h5 mb-1">
                                     <a class="text-decoration-none text-dark" href="{{ path('blog_show', {slug: post.slug}) }}">
