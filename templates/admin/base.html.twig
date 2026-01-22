@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <aside class="col-12 col-lg-3 col-xl-2 bg-dark text-white min-vh-100 p-3">
+            <div class="mb-4">
+                <div class="fw-semibold">Administration</div>
+                <div class="small text-white-50">Back-office</div>
+            </div>
+
+            <nav class="nav flex-column gap-1">
+                <a class="nav-link text-white {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'fw-bold' : '' }}"
+                   href="{{ path('admin_dashboard') }}">
+                    Tableau de bord
+                </a>
+
+                <a class="nav-link text-white {{ app.request.attributes.get('_route') starts with 'admin_user_' ? 'fw-bold' : '' }}"
+                   href="{{ path('admin_user_index') }}">
+                    Utilisateurs
+                </a>
+
+                <a class="nav-link text-white {{ app.request.attributes.get('_route') starts with 'admin_post_' ? 'fw-bold' : '' }}"
+                   href="{{ path('admin_post_index') }}">
+                    Articles
+                </a>
+
+                <a class="nav-link text-white {{ app.request.attributes.get('_route') starts with 'admin_category_' ? 'fw-bold' : '' }}"
+                   href="{{ path('admin_category_index') }}">
+                    Catégories
+                </a>
+
+                <a class="nav-link text-white {{ app.request.attributes.get('_route') starts with 'admin_comment_' ? 'fw-bold' : '' }}"
+                   href="{{ path('admin_comment_index', {pending: 1}) }}">
+                    Commentaires
+                </a>
+            </nav>
+
+            <hr class="border-secondary my-4">
+
+            <a class="nav-link text-white-50" href="{{ path('app_home') }}">Retour au site</a>
+            <a class="nav-link text-white-50" href="{{ path('app_logout') }}">Déconnexion</a>
+        </aside>
+
+        <main class="col-12 col-lg-9 col-xl-10 p-4">
+            {% include 'partials/_flashes.html.twig' %}
+            {% block admin_content %}{% endblock %}
+        </main>
+    </div>
+</div>
+{% endblock %}
