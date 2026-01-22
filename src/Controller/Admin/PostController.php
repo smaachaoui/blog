@@ -110,6 +110,16 @@ class PostController extends AbstractController
     {
         $this->denyAccessUnlessGranted(\App\Security\Voter\PostVoter::DELETE, $post);
         if ($this->isCsrfTokenValid('delete'.$post->getId(), $request->getPayload()->getString('_token'))) {
+            $filesystem = new Filesystem();
+
+            $filename = $post->getCoverImage();
+            if ($filename) {
+                $path = $this->getParameter('covers_directory').'/'.$filename;
+                if ($filesystem->exists($path)) {
+                    $filesystem->remove($path);
+                }
+            }
+
             $entityManager->remove($post);
             $entityManager->flush();
         }
