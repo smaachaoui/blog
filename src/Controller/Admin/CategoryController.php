@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,13 +24,19 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/new', name: 'admin_category_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if (!$category->getSlug()) {
+            $baseSlug = strtolower($slugger->slug($category->getName())->toString());
+            $category->setSlug($this->makeUniqueCategorySlug($baseSlug, $entityManager));
+        }
+
             $entityManager->persist($category);
             $entityManager->flush();
 
@@ -51,12 +58,17 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'admin_category_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Category $category, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Category $category, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$category->getSlug()) {
+                $baseSlug = strtolower($slugger->slug($category->getName())->toString());
+                $category->setSlug($this->makeUniqueCategorySlug($baseSlug, $entityManager));
+            }
+
             $entityManager->flush();
 
             return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
@@ -78,4 +90,18 @@ class CategoryController extends AbstractController
 
         return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    private function makeUniqueCategorySlug(string $baseSlug, EntityManagerInterface $entityManager): string
+    {
+        $slug = $baseSlug;
+        $i = 2;
+
+        while ($entityManager->getRepository(Category::class)->findOneBy(['slug' => $slug]) !== null) {
+            $slug = $baseSlug.'-'.$i;
+            $i++;
+        }
+
+        return $slug;
+    }
+
 }
