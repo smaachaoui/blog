@@ -19,7 +19,6 @@ class PostType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('slug')
             ->add('bookAuthor')
             ->add('content', TextareaType::class, [
                 'attr' => [
