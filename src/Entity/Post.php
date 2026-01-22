@@ -47,7 +47,7 @@ class Post
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
-    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: Comment::class, orphanRemoval: true)]
     private Collection $comments;
 
 
