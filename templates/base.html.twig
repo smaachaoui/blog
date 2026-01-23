@@ -17,7 +17,7 @@
     {% include 'partials/_header.html.twig' %}
 {% endblock %}
 
-<main class="flex-grow-1 d-flex flex-column">
+<main class="flex-grow-1 d-flex flex-column {% block main_class %}py-4 py-lg-5{% endblock %}">
     <div class="{% block page_container_class %}container{% endblock %} flex-grow-1 d-flex flex-column">
         {% include 'partials/_flashes.html.twig' %}
         {% block body %}{% endblock %}
