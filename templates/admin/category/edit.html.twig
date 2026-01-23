@@ -1,13 +1,8 @@
-{% extends 'admin/base.html.twig' %}
+{# J'ai cree le template pour modifier une categorie admin #}
+{% extends 'admin/category/form.html.twig' %}
 
-{% block title %}Catégorie{% endblock %}
-
-{% block admin_content %}
-<div class="card shadow-sm page-card">
-    <div class="card-body p-4">
-        <h1 class="h4 mb-3">{{ title|default('Catégorie') }}</h1>
-
-        {{ include('admin/category/_form.html.twig') }}
-    </div>
-</div>
-{% endblock %}
+{% set page_title = 'Modifier la catégorie' %}
+{% set heading = 'Modifier la catégorie' %}
+{% set subtitle = 'Mettre à jour le nom et le slug.' %}
+{% set button_label = 'Enregistrer' %}
+{% set show_delete = true %}

@@ -1,10 +1,17 @@
-<header class="bg-dark text-white">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{{ path('app_home') }}">Blog Littéraire</a>
+{# J'ai defini le header principal du site #}
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-                    aria-controls="mainNav" aria-expanded="false" aria-label="Basculer la navigation">
+<header class="bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand fw-semibold" href="{{ path('app_home') }}">Blog Littéraire</a>
+
+            <button class="navbar-toggler border-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNav"
+                    aria-controls="mainNav"
+                    aria-expanded="false"
+                    aria-label="Menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -35,21 +42,23 @@
                         {% if is_granted('ROLE_ADMIN') %}
                             <li class="nav-item">
                                 <a class="nav-link {{ app.request.attributes.get('_route') starts with 'admin_' ? 'active' : '' }}"
-                                href="{{ path('admin_dashboard') }}">
-                                    Admin
+                                   href="{{ path('admin_dashboard') }}">
+                                    Administration
                                 </a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link {{ app.request.attributes.get('_route') == 'app_profile' ? 'active' : '' }}"
-                                href="{{ path('app_profile') }}">
-                                    Mon profil
+                                <a class="nav-link {{ app.request.attributes.get('_route') starts with 'dashboard_' or app.request.attributes.get('_route') == 'app_profile' ? 'active' : '' }}"
+                                   href="{{ path('app_profile') }}">
+                                    Mon espace
                                 </a>
                             </li>
                         {% endif %}
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                            <a class="nav-link text-danger" href="{{ path('app_logout') }}">
+                                Déconnexion
+                            </a>
                         </li>
                     {% else %}
                         <li class="nav-item">

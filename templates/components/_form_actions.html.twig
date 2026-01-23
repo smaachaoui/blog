@@ -1,0 +1,11 @@
+{# J'ai cree un composant pour les boutons de formulaire #}
+{# Parametres: submit_label, cancel_route, cancel_params, cancel_label #}
+
+<div class="d-grid d-sm-flex gap-2 mt-4">
+    <button class="btn btn-dark">{{ submit_label|default('Enregistrer') }}</button>
+    {% if cancel_route is defined %}
+        <a href="{{ path(cancel_route, cancel_params|default({})) }}" class="btn btn-outline-dark">
+            {{ cancel_label|default('Annuler') }}
+        </a>
+    {% endif %}
+</div>

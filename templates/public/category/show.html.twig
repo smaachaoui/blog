@@ -1,40 +1,29 @@
+{# J'ai cree la page de detail d'une categorie #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ category.name }}{% endblock %}
 
 {% block body %}
-
-<div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-2 mb-4">
-    <div>
-        <h1 class="h4 mb-1">{{ category.name }}</h1>
-        <div class="text-muted small">Articles de la catégorie.</div>
-    </div>
-
-    <a class="btn btn-outline-dark btn-sm" href="{{ path('category_index') }}">
-        Toutes les catégories
-    </a>
-</div>
+{% include 'components/_page_header.html.twig' with {
+    title: category.name,
+    subtitle: 'Articles de la catégorie.',
+    back_route: 'category_index',
+    back_label: 'Toutes les catégories'
+} %}
 
 <form method="get" class="mb-4">
-    <div class="row g-2 align-items-stretch">
+    <div class="row g-2">
         <div class="col-12 col-md">
-            <input
-                type="text"
-                name="q"
-                class="form-control h-100"
-                placeholder="Rechercher dans cette catégorie…"
-                value="{{ query|default('') }}"
-            >
+            <input type="text"
+                   name="q"
+                   class="form-control"
+                   placeholder="Rechercher dans cette catégorie..."
+                   value="{{ query|default('') }}">
         </div>
-
         <div class="col-12 col-md-auto d-grid d-md-flex gap-2">
             <button class="btn btn-dark">Rechercher</button>
-
             {% if query %}
-                <a class="btn btn-outline-dark"
-                   href="{{ path('category_show', { slug: category.slug }) }}">
-                    Réinitialiser
-                </a>
+                <a href="{{ path('category_show', {slug: category.slug}) }}" class="btn btn-outline-dark">Réinitialiser</a>
             {% endif %}
         </div>
     </div>
@@ -43,38 +32,7 @@
 <div class="row g-3 g-lg-4">
     {% for post in posts %}
         <div class="col-12 col-md-6 col-xl-4">
-            <article class="card shadow-sm h-100">
-                <div class="card-body p-3 p-lg-4 d-flex flex-column">
-                    {% if post.coverImage %}
-                        <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm mb-3">
-                            <img
-                                src="{{ asset('uploads/covers/' ~ post.coverImage) }}"
-                                alt="Couverture"
-                                class="w-100 h-100"
-                                style="object-fit: cover;"
-                                loading="lazy"
-                            >
-                        </div>
-                    {% endif %}
-
-                    <h2 class="h6 mb-1">
-                        <a class="text-decoration-none text-dark"
-                           href="{{ path('blog_show', {slug: post.slug}) }}">
-                            {{ post.title }}
-                        </a>
-                    </h2>
-
-                    <div class="text-muted small">
-                        {{ post.bookAuthor }} · {{ post.createdAt|date('d/m/Y') }}
-                    </div>
-
-                    <div class="mt-3 d-flex gap-2">
-                        <a href="{{ path('blog_show', {slug: post.slug}) }}" class="btn btn-outline-dark btn-sm">
-                            Lire
-                        </a>
-                    </div>
-                </div>
-            </article>
+            {% include 'components/_post_card.html.twig' with {post: post, show_category: false} %}
         </div>
     {% else %}
         <div class="col-12">
@@ -87,13 +45,10 @@
     {% endfor %}
 </div>
 
-<div class="mt-4">
-    {% include 'partials/_pagination.html.twig' with {
-        route: 'category_show',
-        currentPage: currentPage,
-        totalPages: totalPages,
-        params: { slug: category.slug, q: query }
-    } %}
-</div>
-
+{% include 'partials/_pagination.html.twig' with {
+    route: 'category_show',
+    currentPage: currentPage,
+    totalPages: totalPages,
+    params: {slug: category.slug, q: query|default('')}
+} %}
 {% endblock %}

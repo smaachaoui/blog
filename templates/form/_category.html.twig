@@ -1,0 +1,23 @@
+{# J'ai cree le formulaire categorie #}
+{# Parametres: form, button_label, cancel_route, cancel_params #}
+
+{{ form_start(form) }}
+
+<div class="mb-3">
+    {{ form_row(form.name) }}
+</div>
+
+{% if form.slug is defined %}
+    <div class="mb-3">
+        {{ form_row(form.slug) }}
+        <div class="form-text">Laisse vide pour une génération automatique.</div>
+    </div>
+{% endif %}
+
+{% include 'components/_form_actions.html.twig' with {
+    submit_label: button_label|default('Enregistrer'),
+    cancel_route: cancel_route|default(null),
+    cancel_params: cancel_params|default({})
+} %}
+
+{{ form_end(form) }}

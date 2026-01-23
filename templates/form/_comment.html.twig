@@ -1,0 +1,14 @@
+{# J'ai cree le formulaire commentaire #}
+{# Parametres: form, button_label, cancel_route, cancel_params #}
+
+{{ form_start(form) }}
+
+{{ form_widget(form) }}
+
+{% include 'components/_form_actions.html.twig' with {
+    submit_label: button_label|default('Enregistrer'),
+    cancel_route: cancel_route|default(null),
+    cancel_params: cancel_params|default({})
+} %}
+
+{{ form_end(form) }}

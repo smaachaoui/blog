@@ -1,12 +1,69 @@
+{# J'ai cree la page tableau de bord admin #}
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Administration{% endblock %}
+{% block admin_title %}Tableau de bord{% endblock %}
 
 {% block admin_content %}
-<div class="card shadow-sm">
-    <div class="card-body p-4">
-        <h1 class="h4 mb-3">Tableau de bord</h1>
-        <p class="text-muted mb-0">Bienvenue dans l’espace d’administration.</p>
+{% include 'components/_page_header.html.twig' with {
+    title: 'Tableau de bord',
+    subtitle: 'Bienvenue dans l\'espace d\'administration.'
+} %}
+
+<div class="row g-3 g-lg-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body p-4">
+                <h2 class="h6 text-muted mb-2">Utilisateurs</h2>
+                <div class="h4 mb-0">{{ users_count|default(0) }}</div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="{{ path('admin_user_index') }}" class="btn btn-outline-dark btn-sm w-100">
+                    Gérer
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body p-4">
+                <h2 class="h6 text-muted mb-2">Articles</h2>
+                <div class="h4 mb-0">{{ posts_count|default(0) }}</div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="{{ path('admin_post_index') }}" class="btn btn-outline-dark btn-sm w-100">
+                    Gérer
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body p-4">
+                <h2 class="h6 text-muted mb-2">Catégories</h2>
+                <div class="h4 mb-0">{{ categories_count|default(0) }}</div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="{{ path('admin_category_index') }}" class="btn btn-outline-dark btn-sm w-100">
+                    Gérer
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-body p-4">
+                <h2 class="h6 text-muted mb-2">Commentaires</h2>
+                <div class="h4 mb-0">{{ comments_count|default(0) }}</div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="{{ path('admin_comment_index') }}" class="btn btn-outline-dark btn-sm w-100">
+                    Gérer
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

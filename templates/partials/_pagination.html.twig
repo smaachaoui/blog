@@ -1,74 +1,58 @@
+{# J'ai defini le composant de pagination #}
+{# Parametres: route, currentPage, totalPages, params #}
+
 {% if totalPages > 1 %}
     {% set window = 2 %}
-    {% set start = currentPage - window %}
-    {% set end = currentPage + window %}
-
-    {% if start < 1 %}{% set start = 1 %}{% endif %}
-    {% if end > totalPages %}{% set end = totalPages %}{% endif %}
+    {% set start = max(1, currentPage - window) %}
+    {% set end = min(totalPages, currentPage + window) %}
 
     <nav class="mt-4" aria-label="Pagination">
         <ul class="pagination justify-content-center flex-wrap gap-1 mb-0">
-
-            {# Précédent #}
-            <li class="page-item {{ currentPage <= 1 ? 'disabled' }}">
+            <li class="page-item {{ currentPage <= 1 ? 'disabled' : '' }}">
                 <a class="page-link text-dark"
                    href="{{ path(route, params|merge({page: currentPage - 1})) }}"
-                   aria-label="Page précédente">
+                   aria-label="Précédent">
                     <span class="d-none d-sm-inline">Précédent</span>
-                    <span class="d-inline d-sm-none">‹</span>
+                    <span class="d-sm-none">‹</span>
                 </a>
             </li>
 
-            {# Première page + ellipsis #}
             {% if start > 1 %}
                 <li class="page-item">
-                    <a class="page-link text-dark"
-                       href="{{ path(route, params|merge({page: 1})) }}">
-                        1
-                    </a>
+                    <a class="page-link text-dark" href="{{ path(route, params|merge({page: 1})) }}">1</a>
                 </li>
-
                 {% if start > 2 %}
-                    <li class="page-item disabled">
-                        <span class="page-link text-muted">…</span>
-                    </li>
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
                 {% endif %}
             {% endif %}
 
-            {# Fenêtre de pages #}
             {% for p in start..end %}
                 <li class="page-item {{ p == currentPage ? 'active' : '' }}">
-                    <a class="page-link {{ p == currentPage ? 'text-white bg-dark border-dark' : 'text-dark' }}"
+                    <a class="page-link {{ p == currentPage ? 'bg-dark border-dark text-white' : 'text-dark' }}"
                        href="{{ path(route, params|merge({page: p})) }}"
-                       aria-current="{{ p == currentPage ? 'page' : false }}">
+                       {% if p == currentPage %}aria-current="page"{% endif %}>
                         {{ p }}
                     </a>
                 </li>
             {% endfor %}
 
-            {# Ellipsis + dernière page #}
             {% if end < totalPages %}
                 {% if end < totalPages - 1 %}
-                    <li class="page-item disabled">
-                        <span class="page-link text-muted">…</span>
-                    </li>
+                    <li class="page-item disabled"><span class="page-link">…</span></li>
                 {% endif %}
-
                 <li class="page-item">
-                    <a class="page-link text-dark"
-                       href="{{ path(route, params|merge({page: totalPages})) }}">
+                    <a class="page-link text-dark" href="{{ path(route, params|merge({page: totalPages})) }}">
                         {{ totalPages }}
                     </a>
                 </li>
             {% endif %}
 
-            {# Suivant #}
-            <li class="page-item {{ currentPage >= totalPages ? 'disabled' }}">
+            <li class="page-item {{ currentPage >= totalPages ? 'disabled' : '' }}">
                 <a class="page-link text-dark"
                    href="{{ path(route, params|merge({page: currentPage + 1})) }}"
-                   aria-label="Page suivante">
+                   aria-label="Suivant">
                     <span class="d-none d-sm-inline">Suivant</span>
-                    <span class="d-inline d-sm-none">›</span>
+                    <span class="d-sm-none">›</span>
                 </a>
             </li>
         </ul>

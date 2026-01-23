@@ -1,0 +1,100 @@
+{# J'ai cree une sidebar unifiee pour admin et utilisateur #}
+{# Parametres: sidebar_title, sidebar_subtitle #}
+
+<div class="d-flex flex-column h-100">
+    <div class="p-3 border-bottom border-secondary">
+        <div class="d-flex align-items-center justify-content-between gap-2">
+            <div class="min-w-0">
+                <a href="{{ path('app_home') }}" class="text-white text-decoration-none">
+                    <div class="fw-semibold">{{ sidebar_title|default('Mon espace') }}</div>
+                </a>
+                {% if sidebar_subtitle %}
+                    <div class="small text-white-50 text-truncate">{{ sidebar_subtitle }}</div>
+                {% endif %}
+            </div>
+
+            <button class="btn btn-outline-light btn-sm d-lg-none"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#sidebarMenu"
+                    aria-expanded="false"
+                    aria-controls="sidebarMenu">
+                Menu
+            </button>
+        </div>
+    </div>
+
+    <nav id="sidebarMenu" class="collapse d-lg-block flex-grow-1">
+        <ul class="nav flex-column">
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item px-3 py-2">
+                    <span class="text-white-50 small text-uppercase fw-semibold">Administration</span>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active bg-secondary bg-opacity-25' : '' }}"
+                       href="{{ path('admin_dashboard') }}">
+                        Tableau de bord
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ app.request.attributes.get('_route') starts with 'admin_user_' ? 'active bg-secondary bg-opacity-25' : '' }}"
+                       href="{{ path('admin_user_index') }}">
+                        Utilisateurs
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ app.request.attributes.get('_route') starts with 'admin_post_' ? 'active bg-secondary bg-opacity-25' : '' }}"
+                       href="{{ path('admin_post_index') }}">
+                        Articles
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ app.request.attributes.get('_route') starts with 'admin_category_' ? 'active bg-secondary bg-opacity-25' : '' }}"
+                       href="{{ path('admin_category_index') }}">
+                        Catégories
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ app.request.attributes.get('_route') starts with 'admin_comment_' ? 'active bg-secondary bg-opacity-25' : '' }}"
+                       href="{{ path('admin_comment_index') }}">
+                        Commentaires
+                    </a>
+                </li>
+
+            {% elseif is_granted('ROLE_USER') %}
+                <li class="nav-item px-3 py-2">
+                    <span class="text-white-50 small text-uppercase fw-semibold">Mon compte</span>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ app.request.attributes.get('_route') starts with 'dashboard_post_' ? 'active bg-secondary bg-opacity-25' : '' }}"
+                       href="{{ path('dashboard_post_index') }}">
+                        Mes articles
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white {{ app.request.attributes.get('_route') == 'app_profile' ? 'active bg-secondary bg-opacity-25' : '' }}"
+                       href="{{ path('app_profile') }}">
+                        Mon profil
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="p-3 border-top border-secondary mt-auto">
+        <a href="{{ path('app_home') }}" class="btn btn-outline-light btn-sm w-100 mb-2">
+            Retour au site
+        </a>
+        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger btn-sm w-100">
+            Déconnexion
+        </a>
+    </div>
+</div>

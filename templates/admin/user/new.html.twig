@@ -1,28 +1,8 @@
-{% extends 'admin/base.html.twig' %}
+{# J'ai cree le template pour un nouvel utilisateur admin #}
+{% extends 'admin/user/form.html.twig' %}
 
-{% block title %}Créer un utilisateur{% endblock %}
-
-{% block admin_content %}
-
-<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-    <div>
-        <h1 class="h4 mb-1">Créer un utilisateur</h1>
-        <p class="text-muted mb-0">Créer un compte et définir ses rôles.</p>
-    </div>
-
-    <a class="btn btn-outline-dark btn-sm" href="{{ path('admin_user_index') }}">
-        Retour à la liste
-    </a>
-</div>
-
-<div class="row">
-    <div class="col-12 col-xl-8">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                {{ include('admin/user/_form.html.twig', { button_label: 'Créer' }) }}
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endblock %}
+{% set page_title = 'Nouvel utilisateur' %}
+{% set heading = 'Créer un utilisateur' %}
+{% set subtitle = 'Créer un compte et définir ses rôles.' %}
+{% set button_label = 'Créer' %}
+{% set show_delete = false %}

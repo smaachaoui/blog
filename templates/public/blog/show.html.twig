@@ -1,90 +1,65 @@
+{# J'ai cree la page de detail d'un article #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block body %}
-
 <div class="row justify-content-center">
-    <div class="col-12 col-lg-10 col-xl-9">
+    <div class="col-12 col-lg-10 col-xl-8">
 
-        <article class="card shadow-sm">
-            <div class="card-body p-3 p-md-4 p-lg-5">
-                <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-start gap-3 mb-4">
-                    <div>
-                        <h1 class="h4 mb-1">{{ post.title }}</h1>
-                        <div class="text-muted small">
-                            {{ post.bookAuthor }}
-                            · <a class="text-decoration-none text-muted"
-                                 href="{{ path('category_show', {slug: post.category.slug}) }}">
-                                {{ post.category.name }}
-                            </a>
-                            · {{ post.createdAt|date('d/m/Y') }}
-                        </div>
-                    </div>
-
-                    <div class="d-grid d-md-flex gap-2">
-                        <a href="{{ path('app_home') }}" class="btn btn-outline-dark btn-sm">
-                            Retour
-                        </a>
-                        <a href="#comments" class="btn btn-dark btn-sm">
-                            Commentaires
-                        </a>
-                    </div>
-                </div>
+        <article class="card shadow-sm mb-4">
+            <div class="card-body p-4 p-lg-5">
+                {% include 'components/_page_header.html.twig' with {
+                    title: post.title,
+                    subtitle: post.bookAuthor ~ ' · ' ~ post.category.name ~ ' · ' ~ post.createdAt|date('d/m/Y'),
+                    back_route: 'blog_index',
+                    back_label: 'Retour',
+                    actions: '<a href="#comments" class="btn btn-dark btn-sm">Commentaires</a>'
+                } %}
 
                 {% if post.coverImage %}
-                    <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm mb-4">
-                        <img
-                            src="{{ asset('uploads/covers/' ~ post.coverImage) }}"
-                            alt="Couverture"
-                            class="w-100 h-100"
-                            style="object-fit: cover;"
-                            loading="lazy"
-                        >
+                    <div class="ratio ratio-16x9 rounded overflow-hidden mb-4">
+                        <img src="{{ asset('uploads/covers/' ~ post.coverImage) }}"
+                             alt="Couverture"
+                             class="w-100 h-100 object-fit-cover"
+                             loading="lazy">
                     </div>
                 {% endif %}
 
-                <div class="content text-dark">
-                    {{ post.content|nl2br }}
-                </div>
+                <div class="content">{{ post.content|nl2br }}</div>
             </div>
         </article>
 
-        <section id="comments" class="mt-4 mt-lg-5">
-            <div class="d-flex flex-column flex-md-row justify-content-md-between align-items-md-center gap-2 mb-3">
+        <section id="comments">
+            <div class="d-flex justify-content-between align-items-center mb-3">
                 <h2 class="h5 mb-0">Commentaires</h2>
-                <span class="text-muted small">
-                    {{ comments|length }} commentaire{{ comments|length > 1 ? 's' : '' }}
-                </span>
+                <span class="text-muted small">{{ comments|length }} commentaire{{ comments|length > 1 ? 's' : '' }}</span>
             </div>
 
             {% if comments is empty %}
-                <div class="card shadow-sm">
+                <div class="card shadow-sm mb-4">
                     <div class="card-body p-4 text-muted">
                         Aucun commentaire pour le moment.
                     </div>
                 </div>
             {% else %}
-                <div class="d-flex flex-column gap-3">
+                <div class="d-flex flex-column gap-3 mb-4">
                     {% for comment in comments %}
                         <div class="card shadow-sm">
-                            <div class="card-body p-3 p-md-4">
-                                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center gap-1 mb-2">
-                                    <strong class="text-dark">{{ comment.authorName }}</strong>
-                                    <span class="text-muted small">{{ comment.createdAt|date('d/m/Y H:i') }}</span>
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong>{{ comment.authorName }}</strong>
+                                    <small class="text-muted">{{ comment.createdAt|date('d/m/Y H:i') }}</small>
                                 </div>
-
-                                <div class="text-dark">
-                                    {{ comment.content|nl2br }}
-                                </div>
+                                <div>{{ comment.content|nl2br }}</div>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
             {% endif %}
 
-            <div class="card shadow-sm mt-4">
-                <div class="card-body p-3 p-md-4 p-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4 p-lg-5">
                     <h3 class="h6 mb-3">Laisser un commentaire</h3>
 
                     {{ form_start(commentForm) }}
@@ -111,5 +86,4 @@
 
     </div>
 </div>
-
 {% endblock %}

@@ -1,0 +1,77 @@
+{# J'ai cree le formulaire article partage entre admin et dashboard #}
+{# Parametres: form, post, title, button_label, cancel_route, cancel_params #}
+
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+<div class="row g-4">
+    <div class="col-12 col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h6 mb-3">{{ title|default('Contenu') }}</h2>
+
+                <div class="mb-3">
+                    {{ form_row(form.title) }}
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        {{ form_row(form.bookAuthor) }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        {{ form_row(form.category) }}
+                    </div>
+                </div>
+
+                {% if form.slug is defined %}
+                    <div class="mt-3">
+                        {{ form_row(form.slug) }}
+                        <div class="form-text">Laisse vide pour une génération automatique.</div>
+                    </div>
+                {% endif %}
+
+                <hr class="my-4">
+
+                {{ form_row(form.content) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="h6 mb-3">Couverture</h2>
+
+                {% if form.coverImageFile is defined %}
+                    {{ form_row(form.coverImageFile) }}
+                {% elseif form.coverImage is defined %}
+                    {{ form_row(form.coverImage) }}
+                {% endif %}
+
+                {% if post is defined and post.coverImage %}
+                    <div class="mt-3">
+                        <small class="text-muted d-block mb-2">Image actuelle</small>
+                        <img src="{{ asset('uploads/covers/' ~ post.coverImage) }}"
+                             alt="Couverture"
+                             class="img-fluid rounded border"
+                             loading="lazy">
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 mt-3">
+            <button class="btn btn-dark">{{ button_label|default('Enregistrer') }}</button>
+            {% if cancel_route is defined %}
+                <a href="{{ path(cancel_route, cancel_params|default({})) }}" class="btn btn-outline-dark">
+                    Annuler
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="alert alert-light border mt-3 mb-0 small">
+            Ajoute une couverture pour un meilleur rendu.
+        </div>
+    </div>
+</div>
+
+{{ form_end(form) }}

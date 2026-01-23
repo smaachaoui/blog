@@ -1,65 +1,80 @@
+{# J'ai cree la liste des commentaires admin #}
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Commentaires{% endblock %}
+{% block admin_title %}Commentaires{% endblock %}
 
 {% block admin_content %}
-<div class="card shadow-sm page-card">
-    <div class="card-body p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1 class="h4 mb-0">Commentaires</h1>
+{% set actions %}
+    <div class="btn-group btn-group-sm">
+        <a href="{{ path('admin_comment_index') }}" class="btn {{ not app.request.query.get('pending') ? 'btn-dark' : 'btn-outline-dark' }}">
+            Tous
+        </a>
+        <a href="{{ path('admin_comment_index', {pending: 1}) }}" class="btn {{ app.request.query.get('pending') ? 'btn-dark' : 'btn-outline-dark' }}">
+            En attente
+        </a>
+    </div>
+{% endset %}
 
-            <div class="d-flex gap-2">
-                <a class="btn btn-outline-dark btn-sm" href="{{ path('admin_comment_index') }}">Tous</a>
-                <a class="btn btn-dark btn-sm" href="{{ path('admin_comment_index', {pending: 1}) }}">En attente</a>
-            </div>
-        </div>
+{% include 'components/_page_header.html.twig' with {
+    title: 'Commentaires',
+    subtitle: 'Modération des commentaires.',
+    actions: actions
+} %}
 
-        <div class="table-responsive">
+<div class="card shadow-sm">
+    <div class="table-responsive">
         <table class="table table-hover align-middle mb-0">
-            <thead>
+            <thead class="table-light">
                 <tr>
                     <th>Auteur</th>
-                    <th>Article</th>
-                    <th>Date</th>
-                    <th>Statut</th>
-                    <th class="text-end">Actions</th>
+                    <th class="d-none d-md-table-cell">Article</th>
+                    <th class="d-none d-lg-table-cell" style="width: 150px;">Date</th>
+                    <th style="width: 100px;">Statut</th>
+                    <th class="text-end" style="width: 200px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
             {% for comment in comments %}
                 <tr>
-                    <td>{{ comment.authorName }}</td>
-                    <td>{{ comment.post.title }}</td>
-                    <td>{{ comment.createdAt|date('d/m/Y H:i') }}</td>
+                    <td class="fw-semibold">{{ comment.authorName }}</td>
+                    <td class="d-none d-md-table-cell text-muted">{{ comment.post.title }}</td>
+                    <td class="d-none d-lg-table-cell text-muted small">
+                        {{ comment.createdAt|date('d/m/Y H:i') }}
+                    </td>
                     <td>
                         {% if comment.isApproved %}
-                            <span class="badge bg-dark">Approuvé</span>
+                            <span class="badge bg-success">Approuvé</span>
                         {% else %}
-                            <span class="badge bg-secondary">En attente</span>
+                            <span class="badge bg-warning text-dark">En attente</span>
                         {% endif %}
                     </td>
                     <td class="text-end">
-                        {% if not comment.isApproved %}
-                            <form method="post" action="{{ path('admin_comment_approve', {id: comment.id}) }}" class="d-inline">
-                                <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ comment.id) }}">
-                                <button class="btn btn-sm btn-outline-dark">Approuver</button>
+                        <div class="d-inline-flex gap-1 flex-wrap justify-content-end">
+                            {% if not comment.isApproved %}
+                                <form method="post" action="{{ path('admin_comment_approve', {id: comment.id}) }}" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ comment.id) }}">
+                                    <button class="btn btn-outline-success btn-sm">Approuver</button>
+                                </form>
+                            {% endif %}
+                            <form method="post"
+                                  action="{{ path('admin_comment_delete', {id: comment.id}) }}"
+                                  class="d-inline"
+                                  onsubmit="return confirm('Supprimer ce commentaire ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                                <button class="btn btn-outline-danger btn-sm">Supprimer</button>
                             </form>
-                        {% endif %}
-
-                        <form method="post" action="{{ path('admin_comment_delete', {id: comment.id}) }}" class="d-inline" onsubmit="return confirm('Supprimer ce commentaire ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
-                            <button class="btn btn-sm btn-outline-danger">Supprimer</button>
-                        </form>
+                        </div>
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5" class="text-center text-muted">Aucun commentaire</td>
+                    <td colspan="5">
+                        {% include 'components/_empty_state.html.twig' with {message: 'Aucun commentaire.'} %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-        </div>
     </div>
 </div>
 {% endblock %}

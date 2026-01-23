@@ -1,8 +1,12 @@
-<footer class="bg-dark text-white mt-auto">
-    <div class="container py-4">
+{# J'ai defini le footer du site #}
+
+<footer class="bg-dark text-white mt-auto py-4">
+    <div class="container">
         <div class="row align-items-center g-3">
-            <div class="col-12 col-md-6 text-center text-md-start small">
-                © {{ "now"|date("Y") }} | Seifeddine Maachaoui | Blog Littéraire
+            <div class="col-12 col-md-6 text-center text-md-start">
+                <small class="text-white-50">
+                    © {{ "now"|date("Y") }} Blog Littéraire
+                </small>
             </div>
 
             <div class="col-12 col-md-6">
@@ -12,36 +16,16 @@
                             Accueil
                         </a>
                     </li>
-
                     <li class="list-inline-item">
                         <a href="{{ path('blog_index') }}" class="text-white-50 text-decoration-none">
                             Articles
                         </a>
                     </li>
-
                     <li class="list-inline-item">
                         <a href="{{ path('category_index') }}" class="text-white-50 text-decoration-none">
                             Catégories
                         </a>
                     </li>
-
-                    {% if app.user %}
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li class="list-inline-item">
-                                <a href="{{ path('admin_dashboard') }}"
-                                class="text-white-50 text-decoration-none {{ app.request.attributes.get('_route') starts with 'admin_' ? 'fw-semibold' : '' }}">
-                                    Admin
-                                </a>
-                            </li>
-                        {% else %}
-                            <li class="list-inline-item">
-                                <a href="{{ path('app_profile') }}"
-                                class="text-white-50 text-decoration-none {{ app.request.attributes.get('_route') == 'app_profile' ? 'fw-semibold' : '' }}">
-                                    Mon profil
-                                </a>
-                            </li>
-                        {% endif %}
-                    {% endif %}
                 </ul>
             </div>
         </div>

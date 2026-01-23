@@ -1,0 +1,24 @@
+{# J'ai cree un composant pour les en-tetes de page #}
+{# Parametres: title, subtitle, back_route, back_params, back_label, actions #}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h4 mb-1">{{ title }}</h1>
+        {% if subtitle %}
+            <p class="text-muted mb-0 small">{{ subtitle }}</p>
+        {% endif %}
+    </div>
+
+    {% if back_route is defined or actions is defined %}
+        <div class="d-flex flex-wrap gap-2">
+            {% if back_route is defined %}
+                <a href="{{ path(back_route, back_params|default({})) }}" class="btn btn-outline-dark btn-sm">
+                    {{ back_label|default('Retour') }}
+                </a>
+            {% endif %}
+            {% if actions is defined %}
+                {{ actions|raw }}
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

@@ -1,9 +1,13 @@
+{# J'ai defini le layout de base pour l'administration #}
 {% extends 'layouts/sidebar_base.html.twig' %}
 
 {% block title %}{% block admin_title %}Administration{% endblock %}{% endblock %}
 
 {% block sidebar %}
-    {% include 'admin/_sidebar.html.twig' %}
+    {% include 'components/_sidebar.html.twig' with {
+        sidebar_title: 'Administration',
+        sidebar_subtitle: app.user ? app.user.email : null
+    } %}
 {% endblock %}
 
 {% block content %}

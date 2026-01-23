@@ -1,13 +1,8 @@
-{% extends 'admin/base.html.twig' %}
+{# J'ai cree le template pour modifier un commentaire admin #}
+{% extends 'admin/comment/form.html.twig' %}
 
-{% block title %}Edit Comment{% endblock %}
-
-{% block admin_content %}
-    <h1>Edit Comment</h1>
-
-    {{ include('admin/comment/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('admin_comment_index') }}">back to list</a>
-
-    {{ include('admin/comment/_delete_form.html.twig') }}
-{% endblock %}
+{% set page_title = 'Modifier le commentaire' %}
+{% set heading = 'Modifier le commentaire' %}
+{% set subtitle = 'Corriger ou ajuster le contenu.' %}
+{% set button_label = 'Enregistrer' %}
+{% set show_delete = true %}

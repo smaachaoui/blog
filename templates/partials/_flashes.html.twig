@@ -1,5 +1,7 @@
+{# J'ai defini l'affichage des messages flash #}
+
 {% for label, messages in app.flashes %}
-    {% set bootstrapLabel = {
+    {% set alert_class = {
         'error': 'danger',
         'success': 'success',
         'warning': 'warning',
@@ -7,15 +9,9 @@
     }[label]|default('secondary') %}
 
     {% for message in messages %}
-        <div class="alert alert-{{ bootstrapLabel }} alert-dismissible fade show shadow-sm mb-3"
-             role="alert">
+        <div class="alert alert-{{ alert_class }} alert-dismissible fade show shadow-sm mb-3" role="alert">
             {{ message }}
-
-            <button type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert"
-                    aria-label="Fermer">
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
         </div>
     {% endfor %}
 {% endfor %}

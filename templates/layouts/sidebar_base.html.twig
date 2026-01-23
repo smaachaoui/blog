@@ -1,15 +1,25 @@
+{# J'ai defini le layout avec sidebar pour admin et dashboard #}
 {% extends 'base.html.twig' %}
 
-{# Generic 2-column layout with a sidebar (Admin/Dashboard) #}
-{% block body %}
-<div class="container-fluid py-4">
-    <div class="row g-3">
-        <aside class="col-12 col-lg-3 col-xl-2">
-            {% block sidebar %}{% endblock %}
-        </aside>
+{% block header %}{% endblock %}
 
-        <section class="col-12 col-lg-9 col-xl-10">            {% block content %}{% endblock %}
-        </section>
-    </div>
+{% block page_container_class %}container-fluid px-0{% endblock %}
+
+{% block body %}
+<div class="row g-0 min-vh-100">
+    <aside class="col-12 col-lg-3 col-xl-2 bg-dark">
+        <div class="position-lg-sticky top-0 vh-lg-100">
+            {% block sidebar %}{% endblock %}
+        </div>
+    </aside>
+
+    <main class="col-12 col-lg-9 col-xl-10 bg-light">
+        <div class="container-xxl py-3 py-md-4 px-3 px-md-4">
+            {% include 'partials/_flashes.html.twig' %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
 </div>
 {% endblock %}
+
+{% block footer %}{% endblock %}

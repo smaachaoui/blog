@@ -1,0 +1,32 @@
+{# J'ai cree le formulaire utilisateur #}
+{# Parametres: form, button_label, cancel_route, cancel_params #}
+
+{{ form_start(form) }}
+
+<div class="mb-3">
+    {{ form_row(form.email) }}
+</div>
+
+<div class="mb-3">
+    {{ form_row(form.roles) }}
+</div>
+
+<hr class="my-4">
+
+<h2 class="h6 mb-3">Sécurité</h2>
+
+<div class="mb-3">
+    {{ form_row(form.plainPassword.first) }}
+</div>
+
+<div class="mb-3">
+    {{ form_row(form.plainPassword.second) }}
+</div>
+
+{% include 'components/_form_actions.html.twig' with {
+    submit_label: button_label|default('Enregistrer'),
+    cancel_route: cancel_route|default(null),
+    cancel_params: cancel_params|default({})
+} %}
+
+{{ form_end(form) }}

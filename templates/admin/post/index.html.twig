@@ -1,155 +1,84 @@
+{# J'ai cree la liste des articles admin #}
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Articles{% endblock %}
+{% block admin_title %}Articles{% endblock %}
 
 {% block admin_content %}
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-    <div>
-        <h1 class="h4 mb-1">Articles</h1>
-        <div class="text-muted small">Gestion des articles du blog.</div>
-    </div>
-
-    <a href="{{ path('admin_post_new') }}" class="btn btn-dark">
-        + Nouvel article
-    </a>
-</div>
+{% include 'components/_page_header.html.twig' with {
+    title: 'Articles',
+    subtitle: 'Gestion des articles du blog.',
+    actions: '<a href="' ~ path('admin_post_new') ~ '" class="btn btn-dark btn-sm">Nouvel article</a>'
+} %}
 
 <div class="card shadow-sm">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="text-nowrap">ID</th>
-                        <th>Article</th>
-                        <th class="text-nowrap">Catégorie</th>
-                        <th class="text-nowrap">Auteur</th>
-                        <th class="text-nowrap">Dates</th>
-                        <th class="text-end text-nowrap">Actions</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                {% for post in posts %}
-                    <tr>
-                        <td class="text-nowrap">
-                            <span class="badge text-bg-dark">#{{ post.id }}</span>
-                        </td>
-
-                        <td style="min-width: 320px;">
-                            <div class="d-flex gap-3">
-                                <div class="flex-shrink-0" style="width:64px;">
-                                    {% if post.coverImage %}
-                                        <img
-                                            src="{{ asset('uploads/covers/' ~ post.coverImage) }}"
-                                            alt="Couverture"
-                                            class="img-fluid rounded border"
-                                            style="width:64px; height:64px; object-fit:cover;"
-                                            loading="lazy"
-                                        >
-                                    {% else %}
-                                        <div class="rounded border bg-light d-flex align-items-center justify-content-center"
-                                             style="width:64px; height:64px;">
-                                            <span class="text-muted small">—</span>
-                                        </div>
-                                    {% endif %}
-                                </div>
-
-                                <div class="min-w-0">
-                                    <div class="fw-semibold text-truncate">
-                                        {{ post.title }}
-                                    </div>
-
-                                    <div class="text-muted small text-truncate">
-                                        <span class="me-2">Slug :</span>
-                                        <code class="text-muted">{{ post.slug }}</code>
-                                    </div>
-
-                                    <div class="text-muted small text-truncate">
-                                        <span class="me-2">Livre :</span>
-                                        {{ post.bookAuthor }}
-                                    </div>
-
-                                    <div class="text-muted small">
-                                        {{ post.content|striptags|slice(0, 90) }}{% if post.content|length > 90 %}…{% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td class="text-nowrap">
-                            {% if post.category is defined and post.category %}
-                                <span class="badge text-bg-light border">
-                                    {{ post.category.name }}
-                                </span>
-                            {% else %}
-                                <span class="text-muted small">—</span>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 80px;">ID</th>
+                    <th>Article</th>
+                    <th class="d-none d-md-table-cell" style="width: 150px;">Catégorie</th>
+                    <th class="d-none d-lg-table-cell" style="width: 180px;">Auteur</th>
+                    <th class="d-none d-xl-table-cell" style="width: 180px;">Date</th>
+                    <th class="text-end" style="width: 200px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>
+                        <span class="badge bg-dark">#{{ post.id }}</span>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-3 align-items-center">
+                            {% if post.coverImage %}
+                                <img src="{{ asset('uploads/covers/' ~ post.coverImage) }}"
+                                     alt=""
+                                     class="rounded d-none d-sm-block"
+                                     style="width: 48px; height: 48px; object-fit: cover;"
+                                     loading="lazy">
                             {% endif %}
-                        </td>
-
-                        <td class="text-nowrap">
-                            {% if post.author is defined and post.author %}
-                                <span class="text-muted small">{{ post.author.email }}</span>
-                            {% else %}
-                                <span class="text-muted small">—</span>
-                            {% endif %}
-                        </td>
-
-                        <td class="text-nowrap">
-                            <div class="small">
-                                <div>
-                                    <span class="text-muted">Créé :</span>
-                                    {{ post.createdAt ? post.createdAt|date('d/m/Y H:i') : '—' }}
-                                </div>
-                                <div>
-                                    <span class="text-muted">MAJ :</span>
-                                    {{ post.updatedAt ? post.updatedAt|date('d/m/Y H:i') : '—' }}
-                                </div>
+                            <div class="min-w-0">
+                                <div class="fw-semibold text-truncate">{{ post.title }}</div>
+                                {% if post.bookAuthor %}
+                                    <small class="text-muted">{{ post.bookAuthor }}</small>
+                                {% endif %}
                             </div>
-                        </td>
-
-                        <td class="text-end text-nowrap">
-                            <a href="{{ path('admin_post_show', {'id': post.id}) }}"
-                               class="btn btn-sm btn-outline-dark">
+                        </div>
+                    </td>
+                    <td class="d-none d-md-table-cell">
+                        {% if post.category %}
+                            <span class="badge bg-light text-dark border">{{ post.category.name }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="d-none d-lg-table-cell text-muted small">
+                        {{ post.author ? post.author.email : '' }}
+                    </td>
+                    <td class="d-none d-xl-table-cell text-muted small">
+                        {{ post.createdAt ? post.createdAt|date('d/m/Y H:i') : '' }}
+                    </td>
+                    <td class="text-end">
+                        <div class="d-inline-flex gap-1 flex-wrap justify-content-end">
+                            <a href="{{ path('admin_post_show', {id: post.id}) }}" class="btn btn-outline-dark btn-sm">
                                 Voir
                             </a>
-
                             {% if is_granted('POST_EDIT', post) %}
-                                <a href="{{ path('admin_post_edit', {id: post.id}) }}"
-                                   class="btn btn-sm btn-dark">
-                                    Éditer
+                                <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn btn-dark btn-sm">
+                                    Modifier
                                 </a>
                             {% endif %}
-
-                            {% if is_granted('POST_DELETE', post) %}
-                                {# Option A : lien vers page show (où tu as déjà le delete form) #}
-                                {# <a href="{{ path('admin_post_show', {'id': post.id}) }}" class="btn btn-sm btn-outline-danger">Supprimer</a> #}
-
-                                {# Option B : mini form delete direct (recommandé) #}
-                                <form method="post"
-                                      action="{{ path('admin_post_delete', {'id': post.id}) }}"
-                                      class="d-inline"
-                                      onsubmit="return confirm('Supprimer cet article ? Cette action est définitive.');">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.id) }}">
-                                    <button class="btn btn-sm btn-outline-danger">
-                                        Supprimer
-                                    </button>
-                                </form>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="6" class="p-4">
-                            <div class="text-center text-muted">
-                                Aucun article trouvé.
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">
+                        {% include 'components/_empty_state.html.twig' with {message: 'Aucun article.'} %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

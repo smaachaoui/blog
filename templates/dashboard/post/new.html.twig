@@ -1,13 +1,8 @@
-{% extends 'dashboard/base.html.twig' %}
+{# J'ai cree le template pour un nouvel article dashboard #}
+{% extends 'dashboard/post/form.html.twig' %}
 
-{% block title %}Article{% endblock %}
-
-{% block dashboard_content %}
-<div class="card shadow-sm page-card">
-    <div class="card-body p-4">
-        <h1 class="h4 mb-3">{{ title|default('Article') }}</h1>
-
-        {{ include('post/_form.html.twig', {cancel_path: path('dashboard_post_index')}) }}
-    </div>
-</div>
-{% endblock %}
+{% set page_title = 'Nouvel article' %}
+{% set heading = 'Créer un article' %}
+{% set subtitle = 'Rédiger et publier un nouvel article.' %}
+{% set button_label = 'Créer' %}
+{% set show_delete = false %}

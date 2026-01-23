@@ -1,39 +1,8 @@
-{% extends 'admin/base.html.twig' %}
+{# J'ai cree le template pour modifier un utilisateur admin #}
+{% extends 'admin/user/form.html.twig' %}
 
-{% block title %}Modifier un utilisateur{% endblock %}
-
-{% block admin_content %}
-
-<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-    <div>
-        <h1 class="h4 mb-1">Modifier un utilisateur</h1>
-        <p class="text-muted mb-0">Modifier l’email et les rôles.</p>
-    </div>
-
-    <a class="btn btn-outline-dark btn-sm" href="{{ path('admin_user_index') }}">
-        Retour à la liste
-    </a>
-</div>
-
-<div class="row g-3">
-    <div class="col-12 col-lg-8">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                {{ include('admin/user/_form.html.twig', {'button_label': 'Enregistrer'}) }}
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12 col-lg-4">
-        <div class="card border-danger shadow-sm">
-            <div class="card-body p-4">
-                <h2 class="h6 text-danger mb-2">Zone dangereuse</h2>
-                <p class="text-muted small mb-3">La suppression est définitive.</p>
-
-                {{ include('admin/user/_delete_form.html.twig') }}
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endblock %}
+{% set page_title = 'Modifier l\'utilisateur' %}
+{% set heading = 'Modifier l\'utilisateur' %}
+{% set subtitle = 'Mettre à jour l\'email et les rôles.' %}
+{% set button_label = 'Enregistrer' %}
+{% set show_delete = true %}

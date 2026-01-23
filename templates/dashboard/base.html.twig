@@ -1,9 +1,13 @@
+{# J'ai defini le layout de base pour le dashboard utilisateur #}
 {% extends 'layouts/sidebar_base.html.twig' %}
 
-{% block title %}{% block dashboard_title %}Dashboard{% endblock %}{% endblock %}
+{% block title %}{% block dashboard_title %}Mon espace{% endblock %}{% endblock %}
 
 {% block sidebar %}
-    {% include 'dashboard/_sidebar.html.twig' %}
+    {% include 'components/_sidebar.html.twig' with {
+        sidebar_title: 'Mon espace',
+        sidebar_subtitle: app.user ? app.user.email : null
+    } %}
 {% endblock %}
 
 {% block content %}

@@ -1,78 +1,59 @@
+{# J'ai cree le template pour afficher un commentaire admin #}
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Commentaire{% endblock %}
+{% block admin_title %}Commentaire #{{ comment.id }}{% endblock %}
 
 {% block admin_content %}
-<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-    <div>
-        <h1 class="h4 mb-1">Commentaire #{{ comment.id }}</h1>
-        <p class="text-muted mb-0">
-            {{ comment.authorName }} — {{ comment.createdAt ? comment.createdAt|date('d/m/Y H:i') : '' }}
-        </p>
-    </div>
+{% include 'components/_page_header.html.twig' with {
+    title: 'Commentaire #' ~ comment.id,
+    subtitle: comment.authorName ~ ' — ' ~ comment.createdAt|date('d/m/Y H:i'),
+    back_route: 'admin_comment_index',
+    back_label: 'Retour à la liste',
+    actions: '<a href="' ~ path('admin_comment_edit', {id: comment.id}) ~ '" class="btn btn-dark btn-sm">Modifier</a>'
+} %}
 
-    <div class="d-grid d-sm-flex gap-2">
-        <a href="{{ path('admin_comment_index') }}" class="btn btn-outline-dark btn-sm">Retour à la liste</a>
-        <a href="{{ path('admin_comment_edit', {id: comment.id}) }}" class="btn btn-dark btn-sm">Éditer</a>
-    </div>
-</div>
-
-<div class="row g-3">
+<div class="row g-4">
     <div class="col-12 col-lg-8">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <div class="table-responsive">
-                    <table class="table align-middle mb-0">
-                        <tbody>
-                            <tr>
-                                <th class="text-nowrap">Auteur</th>
-                                <td>{{ comment.authorName }}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-nowrap">Email</th>
-                                <td>{{ comment.authorEmail }}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-nowrap">Article</th>
-                                <td>{{ comment.post ? comment.post.title : '—' }}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-nowrap">Statut</th>
-                                <td>
-                                    {% if comment.isApproved %}
-                                        <span class="badge bg-dark">Approuvé</span>
-                                    {% else %}
-                                        <span class="badge bg-secondary">En attente</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="text-nowrap">Date</th>
-                                <td>{{ comment.createdAt ? comment.createdAt|date('d/m/Y H:i') : '—' }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <dl class="row mb-4">
+                    <dt class="col-sm-3 text-muted">Auteur</dt>
+                    <dd class="col-sm-9">{{ comment.authorName }}</dd>
 
-                <hr class="my-4">
+                    <dt class="col-sm-3 text-muted">Email</dt>
+                    <dd class="col-sm-9">{{ comment.authorEmail }}</dd>
 
-                <h2 class="h6">Contenu</h2>
-                <div class="mt-2">
-                    {{ comment.content|nl2br }}
-                </div>
+                    <dt class="col-sm-3 text-muted">Article</dt>
+                    <dd class="col-sm-9">{{ comment.post ? comment.post.title : '—' }}</dd>
+
+                    <dt class="col-sm-3 text-muted">Statut</dt>
+                    <dd class="col-sm-9">
+                        {% if comment.isApproved %}
+                            <span class="badge bg-success">Approuvé</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">En attente</span>
+                        {% endif %}
+                    </dd>
+
+                    <dt class="col-sm-3 text-muted">Date</dt>
+                    <dd class="col-sm-9">{{ comment.createdAt ? comment.createdAt|date('d/m/Y H:i') : '—' }}</dd>
+                </dl>
+
+                <hr>
+
+                <h2 class="h6 mb-3">Contenu</h2>
+                <div class="text-dark">{{ comment.content|nl2br }}</div>
             </div>
         </div>
     </div>
 
     <div class="col-12 col-lg-4">
-        <div class="card border-danger shadow-sm">
-            <div class="card-body p-4">
-                <h2 class="h6 text-danger mb-2">Zone dangereuse</h2>
-                <p class="text-muted small mb-3">La suppression est définitive.</p>
-
-                {{ include('comment/_delete_form.html.twig', { comment: comment }) }}
-            </div>
-        </div>
+        {% include 'components/_danger_zone.html.twig' with {
+            delete_route: 'admin_comment_delete',
+            delete_params: {id: comment.id},
+            entity_id: comment.id,
+            confirm_message: 'Supprimer ce commentaire ?'
+        } %}
     </div>
 </div>
 {% endblock %}

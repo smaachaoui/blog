@@ -1,0 +1,16 @@
+{# J'ai cree un composant pour la zone de suppression #}
+{# Parametres: delete_route, delete_params, entity_id, confirm_message #}
+
+<div class="card border-danger shadow-sm">
+    <div class="card-body p-4">
+        <h2 class="h6 text-danger mb-2">Zone dangereuse</h2>
+        <p class="text-muted small mb-3">Cette action est irréversible.</p>
+
+        <form method="post"
+              action="{{ path(delete_route, delete_params) }}"
+              onsubmit="return confirm('{{ confirm_message|default('Confirmer la suppression ?')|e('js') }}');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ entity_id) }}">
+            <button class="btn btn-outline-danger w-100">Supprimer</button>
+        </form>
+    </div>
+</div>

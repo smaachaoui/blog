@@ -1,13 +1,8 @@
-{% extends 'admin/base.html.twig' %}
+{# J'ai cree le template pour modifier un article admin #}
+{% extends 'admin/post/form.html.twig' %}
 
-{% block title %}Edit Post{% endblock %}
-
-{% block admin_content %}
-    <h1>Edit Post</h1>
-
-    {{ include('post/_form.html.twig', {button_label: 'Mettre à jour', cancel_path: path('admin_post_index')}) }}
-
-    <a href="{{ path('admin_post_index') }}">Retour à la liste</a>
-
-    {{ include('post/_delete_form.html.twig', {post: post, delete_route: 'admin_post_delete'}) }}
-{% endblock %}
+{% set page_title = 'Modifier l\'article' %}
+{% set heading = 'Modifier l\'article' %}
+{% set subtitle = 'Mettre à jour le contenu et la couverture.' %}
+{% set button_label = 'Enregistrer' %}
+{% set show_delete = true %}

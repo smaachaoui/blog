@@ -1,57 +1,42 @@
+{# J'ai cree le template pour afficher une categorie admin #}
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Catégorie{% endblock %}
+{% block admin_title %}{{ category.name }}{% endblock %}
 
 {% block admin_content %}
-<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-    <div>
-        <h1 class="h4 mb-1">{{ category.name }}</h1>
-        <p class="text-muted mb-0">
-            Slug : <code class="text-muted">{{ category.slug }}</code>
-        </p>
-    </div>
+{% include 'components/_page_header.html.twig' with {
+    title: category.name,
+    subtitle: 'Slug : ' ~ category.slug,
+    back_route: 'admin_category_index',
+    back_label: 'Retour à la liste',
+    actions: '<a href="' ~ path('admin_category_edit', {id: category.id}) ~ '" class="btn btn-dark btn-sm">Modifier</a>'
+} %}
 
-    <div class="d-grid d-sm-flex gap-2">
-        <a href="{{ path('admin_category_index') }}" class="btn btn-outline-dark btn-sm">Retour à la liste</a>
-        <a href="{{ path('admin_category_edit', {id: category.id}) }}" class="btn btn-dark btn-sm">Éditer</a>
-    </div>
-</div>
-
-<div class="row g-3">
+<div class="row g-4">
     <div class="col-12 col-lg-8">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <div class="table-responsive">
-                    <table class="table align-middle mb-0">
-                        <tbody>
-                            <tr>
-                                <th class="text-nowrap">ID</th>
-                                <td>#{{ category.id }}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-nowrap">Nom</th>
-                                <td>{{ category.name }}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-nowrap">Slug</th>
-                                <td><code class="text-muted">{{ category.slug }}</code></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <dl class="row mb-0">
+                    <dt class="col-sm-3 text-muted">ID</dt>
+                    <dd class="col-sm-9">#{{ category.id }}</dd>
+
+                    <dt class="col-sm-3 text-muted">Nom</dt>
+                    <dd class="col-sm-9">{{ category.name }}</dd>
+
+                    <dt class="col-sm-3 text-muted">Slug</dt>
+                    <dd class="col-sm-9"><code class="text-muted">{{ category.slug }}</code></dd>
+                </dl>
             </div>
         </div>
     </div>
 
     <div class="col-12 col-lg-4">
-        <div class="card border-danger shadow-sm">
-            <div class="card-body p-4">
-                <h2 class="h6 text-danger mb-2">Zone dangereuse</h2>
-                <p class="text-muted small mb-3">La suppression est définitive.</p>
-
-                {{ include('category/_delete_form.html.twig', { category: category }) }}
-            </div>
-        </div>
+        {% include 'components/_danger_zone.html.twig' with {
+            delete_route: 'admin_category_delete',
+            delete_params: {id: category.id},
+            entity_id: category.id,
+            confirm_message: 'Supprimer cette catégorie ?'
+        } %}
     </div>
 </div>
 {% endblock %}

@@ -1,38 +1,33 @@
+{# J'ai cree le template de base pour les formulaires article dashboard #}
 {% extends 'dashboard/base.html.twig' %}
 
-{% block title %}{{ page_title|default('Article') }}{% endblock %}
+{% block dashboard_title %}{{ page_title|default('Article') }}{% endblock %}
 
 {% block dashboard_content %}
-<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-    <div>
-        <h1 class="h4 mb-1">{{ heading|default(page_title|default('Article')) }}</h1>
-        <p class="text-muted mb-0">{{ subtitle|default('Gérer tes articles.') }}</p>
-    </div>
+{% include 'components/_page_header.html.twig' with {
+    title: heading|default(page_title|default('Article')),
+    subtitle: subtitle|default('Gérer ton article.'),
+    back_route: 'dashboard_post_index',
+    back_label: 'Retour à la liste'
+} %}
 
-    <a class="btn btn-outline-dark btn-sm" href="{{ path('dashboard_post_index') }}">
-        Retour à la liste
-    </a>
-</div>
-
-{{ include('post/_form.html.twig', {
+{% include 'form/_post.html.twig' with {
     form: form,
-    post: post,
+    post: post|default(null),
     title: heading|default('Article'),
     button_label: button_label|default('Enregistrer'),
     cancel_route: 'dashboard_post_index'
-}) }}
+} %}
 
-{% if show_delete|default(false) %}
-    <div class="row mt-3">
+{% if show_delete|default(false) and post is defined %}
+    <div class="row mt-4">
         <div class="col-12 col-lg-4 ms-auto">
-            <div class="card border-danger shadow-sm">
-                <div class="card-body p-4">
-                    <h2 class="h6 text-danger mb-2">Zone dangereuse</h2>
-                    <p class="text-muted small mb-3">La suppression est définitive.</p>
-
-                    {{ include('post/_delete_form.html.twig', { post: post, delete_route: 'dashboard_post_delete' }) }}
-                </div>
-            </div>
+            {% include 'components/_danger_zone.html.twig' with {
+                delete_route: 'dashboard_post_delete',
+                delete_params: {id: post.id},
+                entity_id: post.id,
+                confirm_message: 'Supprimer cet article ?'
+            } %}
         </div>
     </div>
 {% endif %}
