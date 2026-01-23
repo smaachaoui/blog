@@ -1,63 +1,121 @@
-# BLOG LITTÉRAIRE SYMFONY
+# Blog Littéraire
 
-Je développe un blog littéraire avec Symfony. Le site propose une partie publique permettant de lire des articles et de naviguer par catégories. J’ai ajouté un espace utilisateur pour gérer ses propres articles, ainsi qu’une zone d’administration destinée à la modération et à la gestion du contenu.
+Blog littéraire développé avec Symfony 7.4 permettant la publication et la gestion d'articles, avec modération des commentaires.
 
-## PRÉREQUIS
+## Fonctionnalités
 
-Je travaille avec **PHP 8.2 ou supérieur**, **Composer** et une base de données compatible avec **Doctrine** (par exemple MySQL ou PostgreSQL). J’utilise **Symfony CLI** pour lancer le serveur plus facilement, mais ce n’est pas obligatoire.
+**Visiteur**
+- Consultation des articles avec recherche et pagination
+- Navigation par catégories
+- Dépôt de commentaires (soumis à modération)
 
-## INSTALLATION
+**Utilisateur connecté**
+- Création, modification et suppression de ses articles
+- Upload d'images de couverture
 
-1. J’installe les dépendances PHP avec Composer :
+**Administrateur**
+- Gestion complète des articles, catégories et utilisateurs
+- Modération des commentaires
 
-   ```bash
-   composer install
-   ```
+## Prérequis
 
-2. Je configure la base de données dans le fichier `.env.local`.  
-   Je définis la variable `DATABASE_URL` avec mes paramètres locaux.
+- PHP 8.2+
+- Composer
+- MySQL 8.0+ ou PostgreSQL 16+
+- Symfony CLI (recommandé)
 
-3. Je crée la base de données et j’applique les migrations :
-
-   ```bash
-   php bin/console doctrine:database:create
-   php bin/console doctrine:migrations:migrate
-   ```
-
-4. Je prépare le dossier d’upload des images de couverture.  
-   Je vérifie que le dossier `public/uploads/covers` existe et qu’il est accessible en écriture par PHP.
-
-## LANCER LE PROJET
-
-Je peux lancer le serveur Symfony :
+## Installation
 
 ```bash
-symfony serve
+# Cloner le projet
+git clone <url-du-repo>
+cd blog-litteraire
+
+# Installer les dépendances
+composer install
+
+# Configurer la base de données dans .env.local
+cp .env .env.local
 ```
 
-Je peux également utiliser le serveur PHP intégré :
+Modifier `DATABASE_URL` dans `.env.local` :
+
+```env
+# MySQL
+DATABASE_URL="mysql://user:password@127.0.0.1:3306/blog_litteraire?serverVersion=8.0"
+
+# PostgreSQL
+DATABASE_URL="postgresql://user:password@127.0.0.1:5432/blog_litteraire?serverVersion=16&charset=utf8"
+```
 
 ```bash
+# Créer la base et appliquer les migrations
+php bin/console doctrine:database:create
+php bin/console doctrine:migrations:migrate
+
+# Vérifier que le dossier d'upload existe
+mkdir -p public/uploads/covers
+```
+
+## Lancement
+
+```bash
+# Avec Symfony CLI
+symfony serve
+
+# Ou avec PHP
 php -S 127.0.0.1:8000 -t public
 ```
 
-## ACCÈS AU SITE
+## Créer un administrateur
 
-Je peux accéder à la partie publique du site :
+1. Créer un compte via `/register`
+2. Modifier le champ `roles` en base de données :
+   ```sql
+   UPDATE user SET roles = '["ROLE_ADMIN"]' WHERE email = 'admin@example.com';
+   ```
+3. Gérer ensuite les utilisateurs depuis `/admin/users`
 
-- Page d’accueil : `/`
-- Liste des articles : `/articles`
-- Détail d’un article : `/blog/{slug}`
-- Liste des catégories : `/categories`
-- Détail d’une catégorie : `/category/{slug}`
+## Routes principales
 
-Je peux accéder à l’authentification :
+| Route | Description |
+|-------|-------------|
+| `/` | Accueil |
+| `/articles` | Liste des articles |
+| `/categories` | Liste des catégories |
+| `/login` | Connexion |
+| `/register` | Inscription |
+| `/dashboard/posts` | Espace utilisateur |
+| `/admin` | Administration |
 
-- Connexion : `/login`
-- Inscription : `/register`
-- Déconnexion : `/logout`
+## Structure
 
-## TESTS
+```
+src/
+├── Controller/
+│   ├── Admin/          # Back-office administration
+│   ├── Dashboard/      # Espace utilisateur connecté
+│   └── Public/         # Pages publiques
+├── Entity/             # Entités Doctrine
+├── Form/               # Formulaires
+├── Repository/         # Requêtes base de données
+└── Security/           # Authenticator et Voter
 
-```bash
-php bin/phpunit
+templates/
+├── admin/              # Vues administration
+├── dashboard/          # Vues espace utilisateur
+├── public/             # Vues publiques
+├── components/         # Composants réutilisables
+├── form/               # Formulaires partagés
+├── layouts/            # Layouts avec sidebar
+└── partials/           # Header, footer, pagination
+```
+
+## Stack technique
+
+- **Framework** : Symfony 7.4
+- **ORM** : Doctrine
+- **Templates** : Twig
+- **CSS** : Bootstrap 5.3 (via Importmap)
+- **Authentification** : Security component avec authenticator personnalisé
+- **Autorisation** : Voter pour les droits sur les articles
