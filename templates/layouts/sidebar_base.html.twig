@@ -1,14 +1,12 @@
 {# J'ai defini le layout avec sidebar pour admin et dashboard #}
 {% extends 'base.html.twig' %}
 
-{% block header %}{% endblock %}
-
 {% block page_container_class %}container-fluid px-0{% endblock %}
 
 {% block body %}
-<div class="row g-0 min-vh-100">
-    <aside class="col-12 col-lg-3 col-xl-2 bg-dark">
-        <div class="position-lg-sticky top-0 vh-lg-100">
+<div class="row g-0 flex-grow-1">
+    <aside class="col-12 col-lg-3 col-xl-2 bg-dark d-flex">
+        <div class="position-lg-sticky top-0 w-100 align-self-start" style="min-height: 100%;">
             {% block sidebar %}{% endblock %}
         </div>
     </aside>
@@ -21,5 +19,3 @@
     </main>
 </div>
 {% endblock %}
-
-{% block footer %}{% endblock %}
